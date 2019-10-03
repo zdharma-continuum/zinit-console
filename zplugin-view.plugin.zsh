@@ -5,8 +5,12 @@
 # to ~/.zshrc. But of course, this plugin is an extension to Zplugin.
 #
 
-0="${(%):-%N}" # this gives immunity to functionargzero being unset
-export ZPVIEW_REPO_DIR="${0%/*}"
+# Standarized $0 handling
+# http://zdharma.org/zplugin/wiki/zsh-plugin-standard/
+0="${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}"
+0="${${(M)0:#/*}:-$PWD/$0}"
+
+export ZPVIEW_REPO_DIR="${0:h}"
 
 if [[ "${+functions[-zui_std_cleanup]}" = "0" ]]; then
     echo "ZPView uses ZUI plugin, please load https://github.com/zdharma/zui/ with your plugin manager, or source it."
