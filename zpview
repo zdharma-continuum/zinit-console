@@ -513,9 +513,7 @@ function .zpview-set-zui-settings() {
         ZUI[my_delete_mode]=1
     fi
 
-    -zpview_refresh2_all_string
-
-    reply=( "$REPLY" "" )
+    reply=( ",all," "" )
 }
 # }}}
 # FUNCTION: .zpview-action-compact-mode {{{
@@ -528,8 +526,7 @@ function .zpview-set-zui-settings() {
         ZUI[my_compact_mode]=1
     fi
 
-    -zpview_refresh2_all_string
-    reply=( "$REPLY" "" )
+    reply=( ",all," "" )
 }
 # }}}
 # FUNCTION: .zpview-clear-visual-state {{{
