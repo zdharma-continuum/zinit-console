@@ -22,24 +22,24 @@ autoload -- -zpview-process-buffer
 local -a ZCR_DEBUG_MSGS
 
 # Append message to the debug view
--zpview_dbg_msg() { ZCR_DEBUG_MSGS+=( "$*" ); }
+/zpview-dbg-msg() { ZCR_DEBUG_MSGS+=( "$*" ); }
 # Append multiple messages to the debug view
--zpview_dbg_msg_arr() { ZCR_DEBUG_MSGS+=( "$@" ); }
+/zpview-dbg-msg-arr() { ZCR_DEBUG_MSGS+=( "$@" ); }
 
 ZUI[log_time_format]="[%H:%M] "
 
 # Initial debug message
--zpview_dbg_msg "ZSH version: $ZSH_VERSION ($ZSH_PATCHLEVEL), machine: $CPUTYPE $VENDOR $OSTYPE, LANG: $LANG"
+/zpview-dbg-msg "ZSH version: $ZSH_VERSION ($ZSH_PATCHLEVEL), machine: $CPUTYPE $VENDOR $OSTYPE, LANG: $LANG"
 if [[ ${+ZPLGM} = 1 ]]; then
-    -zpview_dbg_msg "Zplugin version: <ZPLGVERSION>, Zplugin-Crasis version: <ZCRVERSION>"
-    -zpview_dbg_msg "Zplugin BIN_DIR: ${ZPLGM[BIN_DIR]/$HOME/~}, HOME_DIR: ${ZPLGM[HOME_DIR]/$HOME/~}, PLUGINS_DIR: ${ZPLGM[PLUGINS_DIR]/$HOME/~}, COMPLETIONS_DIR: ${ZPLGM[COMPLETIONS_DIR]/$HOME/~}"
+    /zpview-dbg-msg "Zplugin version: <ZPLGVERSION>, Zplugin-Crasis version: <ZCRVERSION>"
+    /zpview-dbg-msg "Zplugin BIN_DIR: ${ZPLGM[BIN_DIR]/$HOME/~}, HOME_DIR: ${ZPLGM[HOME_DIR]/$HOME/~}, PLUGINS_DIR: ${ZPLGM[PLUGINS_DIR]/$HOME/~}, COMPLETIONS_DIR: ${ZPLGM[COMPLETIONS_DIR]/$HOME/~}"
 else
-    -zpview_dbg_msg "${ZUI[RED]}Zplugin not loaded${ZUI[FMT_END]}"
+    /zpview-dbg-msg "${ZUI[RED]}Zplugin not loaded${ZUI[FMT_END]}"
 fi
 
--zpview_dbg_msg ""
--zpview_dbg_msg_arr "Active plugins:" "${ZPLG_REGISTERED_PLUGINS[@]/(#s)/ }"
--zpview_dbg_msg ""
+/zpview-dbg-msg ""
+/zpview-dbg-msg-arr "Active plugins:" "${ZPLG_REGISTERED_PLUGINS[@]/(#s)/ }"
+/zpview-dbg-msg ""
 
 #
 # CONSTANTS
@@ -123,10 +123,10 @@ thtxt_entries2=( p-mode-text )
 
 local -A theme
 
-# FUNCTION: -zpview_process_theme {{{
+# FUNCTION: .zpview-process-theme {{{
 # Theme file contains a little complex data and
 # this functions converts it to be ready to use
-function -zpview_process_theme() {
+function .zpview-process-theme() {
     typeset -F 3 SECONDS=0
 
     local -A theme_save
@@ -170,12 +170,12 @@ function -zpview_process_theme() {
     local -a provided missing
     provided=( "${(@)theme[(I)(${(~j:|:)thcol_entries})]}" "${(@)theme[(I)(${(~j:|:)thcol_entries2})]}" )
     missing=( ${thcol_entries:|provided} ${thcol_entries2:|provided} )
-    -zpview_dbg_msg "Theme provided ${#provided} color entries (out of $(( ${#thcol_entries} + ${#thcol_entries2} )) required, missing keys: ${missing:-none})"
+    /zpview-dbg-msg "Theme provided ${#provided} color entries (out of $(( ${#thcol_entries} + ${#thcol_entries2} )) required, missing keys: ${missing:-none})"
 
     # Stats on text settings
     provided=( "${(@)theme[(I)(${(~j:|:)thtxt_entries})]}" "${(@)theme[(I)(${(~j:|:)thtxt_entries2})]}" )
     missing=( ${thtxt_entries:|provided} ${thtxt_entries2:|provided} )
-    -zpview_dbg_msg "Theme provided ${#provided} text entries (out of $(( ${#thtxt_entries} + ${#thtxt_entries2} )) required, missing keys: ${missing:-none})"
+    /zpview-dbg-msg "Theme provided ${#provided} text entries (out of $(( ${#thtxt_entries} + ${#thtxt_entries2} )) required, missing keys: ${missing:-none})"
 
     # Convert colors' symbolic names like "green"
     local ckey cval nval
@@ -278,16 +278,16 @@ function -zpview_process_theme() {
         theme[i-unknown-text-c]="${theme[i-unknown-text]//\%s/${theme[i-unknown]}%s$ZUI[FMT_END]}"
     } || theme[i-unknown-text-c]="$theme[i-unknown-text]"
 
-    -zpview_dbg_msg_arr "Theme processing time: $SECONDS seconds" ""
+    /zpview-dbg-msg-arr "Theme processing time: $SECONDS seconds" ""
     -zui_std_stalog "Loaded theme \`$ZPVIEW_THEME' and layout \`$ZPVIEW_LAYOUT'"
 
     return 0
 }
 # }}}
-# FUNCTION: -zpview_set_zui_settings {{{
+# FUNCTION: .zpview-set-zui-settings {{{
 # If theme provides palette-string, it is
 # applied to ZUI settings of this application
-function -zpview_set_zui_settings() {
+function .zpview-set-zui-settings() {
     [[ -n "$theme[palette-string]" ]] && {
         autoload is-at-least
         if [[ "$theme[palette-string]" = *[[:digit:]]* ]] && ! is-at-least 5.3; then
@@ -326,34 +326,34 @@ function -zpview_set_zui_settings() {
     [[ -n "$theme[altmark2]}" ]] && ZUI[altmark2]="$theme[altmark2]"
 }
 # }}}
-# FUNCTION: -zpview_switch_theme {{{
+# FUNCTION: .zpview-switch-theme {{{
 # Switches theme during operation of Crasis (not
 # at startup).
 #
 # $1 - theme name (not path, no .cr-theme extension)
--zpview_switch_theme() {
+.zpview-switch-theme() {
     -zui_std_strip_color_codes "$1"
     ZPVIEW_THEME="$REPLY"
-    -zpview_process_theme
-    -zpview_set_zui_settings
+    .zpview-process-theme
+    .zpview-set-zui-settings
 }
 # }}}
-# FUNCTION: -zpview_switch_layout {{{
+# FUNCTION: .zpview-switch-layout {{{
 # Switches layout during operation of Crasis (not
 # at startup).
 #
 # $1 - layout name (not path, no .cr-theme extension)
--zpview_switch_layout() {
+.zpview-switch-layout() {
     -zui_std_strip_color_codes "$1"
     ZPVIEW_LAYOUT="$REPLY"
-    -zpview_process_theme
-    -zpview_set_zui_settings
+    .zpview-process-theme
+    .zpview-set-zui-settings
 }
 # }}}
-# FUNCTION: -zpview_action_save_options {{{
+# FUNCTION: .zpview-action-save-options {{{
 # Stores current settings to $ZPVIEW_REPO_DIR/zpview.conf.
 # Outputs status message.
--zpview_action_save_options() {
+.zpview-action-save-options() {
     local out="$ZPVIEW_REPO_DIR/zpview.conf"
     print -r -- "local theme_name=${ZPVIEW_THEME}   # Name of active theme. \$ZPVIEW_THEME overrides." >| "$out"
     print -r -- "local move_unicode_buttons=${theme[ud-unicode-bool]}   # Use unicode glyphs for up & down buttons?" >>| "$out"
@@ -363,15 +363,15 @@ function -zpview_set_zui_settings() {
 }
 # }}}
 
--zpview_process_theme || return 1
--zpview_set_zui_settings
+.zpview-process-theme || return 1
+.zpview-set-zui-settings
 
-# FUNCTION: -zpview_action_preview {{{
+# FUNCTION: .zpview-action-preview {{{
 # Enters or leaves preview alternate-view. It basically
 # sets preview module's instance to be created, once.
 # At the same time, the plugin-list module is set to 0
 # instances. Number of instances is the "module factor".
--zpview_action_preview() {
+.zpview-action-preview() {
     -zui_std_set_mod_factor 4 0
     -zui_std_set_mod_factor 5 0
     ZUI[my_in_debug]=0
@@ -398,11 +398,11 @@ function -zpview_set_zui_settings() {
     fi
 }
 # }}}
-# FUNCTION: -zpview_action_options_view {{{
+# FUNCTION: .zpview-action-options-view {{{
 # Enters or leaves options alternate-view. It basically
 # sets option module's instance to be created, once (when
 # entering) - by changing the module factor.
--zpview_action_options_view() {
+.zpview-action-options-view() {
     -zui_std_set_mod_factor 3 0
     -zui_std_set_mod_factor 4 0
     ZUI[my_in_debug]=0
@@ -428,13 +428,13 @@ function -zpview_set_zui_settings() {
     fi
 }
 # }}}
-# FUNCTION: -zpview_action_debug_view {{{
+# FUNCTION: .zpview-action-debug-view {{{
 # Enters or leaves debug view. Plugin-list view is muted
 # by setting module 2 factor to 0 - factor is the number
 # of instances of a module to create, i.e. number of calls
 # to module's generator. Debug module (#4) obtains factor 1.
 # On disable, normal factors are restored.
--zpview_action_debug_view() {
+.zpview-action-debug-view() {
     -zui_std_set_mod_factor 3 0
     -zui_std_set_mod_factor 5 0
     ZUI[my_in_preview]=0
@@ -474,7 +474,7 @@ function -zpview_set_zui_settings() {
     fi
 }
 # }}}
-# FUNCTION: -zpview_action_delete {{{
+# FUNCTION: .zpview-action-delete {{{
 # Removes given entry from $cmdlist and orders full
 # regeneration of document section holding the zplugin
 # invocations (the main view). Basically, there will be
@@ -484,7 +484,7 @@ function -zpview_set_zui_settings() {
 # $1 - widget id
 # $2 - module's index
 # $3 - module's instance index
--zpview_action_delete() {
+.zpview-action-delete() {
     local id="$1" mod="$2" ice="$3"
     cmdlist[(ice-1)*3+1,ice*3]=()
 
@@ -493,7 +493,7 @@ function -zpview_set_zui_settings() {
 
     -zui_std_set_mod_factor 2 "$size"
 
-    -zpview_clear_visual_state
+    .zpview-clear-visual-state
 
     for (( i=1; i<=size; ++ i )); do
         rtext+="mod${mod}_ice${i},"
@@ -502,11 +502,11 @@ function -zpview_set_zui_settings() {
     reply=( "$rtext" "" )
 }
 # }}}
-# FUNCTION: -zpview_action_delete_mode {{{
+# FUNCTION: .zpview-action-delete-mode {{{
 # Enables ability to delete entries - adds [X] button
 # to each plugin, snippet, external command, etc. (main
 # view).
--zpview_action_delete_mode() {
+.zpview-action-delete-mode() {
     if [[ -n "${ZUI[my_delete_mode]}" ]]; then
         (( ZUI[my_delete_mode] = 1 - ZUI[my_delete_mode] ))
     else
@@ -518,10 +518,10 @@ function -zpview_set_zui_settings() {
     reply=( "$REPLY" "" )
 }
 # }}}
-# FUNCTION: -zpview_action_compact_mode {{{
+# FUNCTION: .zpview-action-compact-mode {{{
 # Switches the entry list to compact-mode. In this mode,
 # only a single line per plugin/snippet/etc. is displayed.
--zpview_action_compact_mode() {
+.zpview-action-compact-mode() {
     if [[ -n "${ZUI[my_compact_mode]}" ]]; then
         (( ZUI[my_compact_mode] = (ZUI[my_compact_mode]+1) % 3 ))
     else
@@ -532,10 +532,10 @@ function -zpview_set_zui_settings() {
     reply=( "$REPLY" "" )
 }
 # }}}
-# FUNCTION: -zpview_clear_visual_state {{{
+# FUNCTION: .zpview-clear-visual-state {{{
 # Clears generators' working variables to trigger refresh
 # from backend, model-structures (like $cmdlist).
--zpview_clear_visual_state() {
+.zpview-clear-visual-state() {
     integer i size=$(( ${#cmdlist} / 3 ))
     local -a keys
     local k
@@ -564,11 +564,11 @@ function -zpview_set_zui_settings() {
     done
 }
 # }}}
-# FUNCTION: -zpview_generator_0 {{{
+# FUNCTION: .zpview-generator-0 {{{
 # ZUI generator that creates top menu (its hypertext).
 # The menu can differ depending on current view mode
 # (normal, preview, debug).
--zpview_generator_0() {
+.zpview-generator-0() {
     local mod="$1" ice="$2"
     local pv_col op_col dg_col dl_col ed_col co_col
     local -a optional
@@ -600,14 +600,14 @@ function -zpview_set_zui_settings() {
     # 1. - 5.
     local close
     [[ -n "$theme[menu-bg]" || -n "$theme[reload]" ]] && close="${ZUI[FMT_END]}" || close=""
-    -zui_std_button "reload" "$theme[reload]$theme[menu-bg]$theme[reload-text]$close" -zpview_action_reload
+    -zui_std_button "reload" "$theme[reload]$theme[menu-bg]$theme[reload-text]$close" .zpview-action-reload
 
     [[ -n "$theme[menu-bg]" || -n "$theme[save]" ]] && close="${ZUI[FMT_END]}" || close=""
-    -zui_std_button "save" "$theme[save]$theme[menu-bg]$theme[save-text]$close" '-zpview_action_save; internal=1'
+    -zui_std_button "save" "$theme[save]$theme[menu-bg]$theme[save-text]$close" '.zpview-action-save; internal=1'
 
-    -zui_std_button "preview" "${pv_col}$theme[preview-text]${pv_col:+${ZUI[FMT_END]}}" -zpview_action_preview
-    -zui_std_button "options" "${op_col}$theme[options-text]${op_col:+${ZUI[FMT_END]}}" -zpview_action_options_view
-    -zui_std_button "debug" "${dg_col}$theme[debug-text]${dg_col:+${ZUI[FMT_END]}}" -zpview_action_debug_view
+    -zui_std_button "preview" "${pv_col}$theme[preview-text]${pv_col:+${ZUI[FMT_END]}}" .zpview-action-preview
+    -zui_std_button "options" "${op_col}$theme[options-text]${op_col:+${ZUI[FMT_END]}}" .zpview-action-options-view
+    -zui_std_button "debug" "${dg_col}$theme[debug-text]${dg_col:+${ZUI[FMT_END]}}" .zpview-action-debug-view
 
     (( ${ZUI[my_in_preview]} + ZUI[my_in_debug] + ZUI[my_in_options] == 0 )) && {
         # Variables of the list box
@@ -616,20 +616,20 @@ function -zpview_set_zui_settings() {
         (( ${+ZUI[my_lbox1_opts]} == 0 )) && ZUI[my_lbox1_opts]="${(j:;:)chosen_plugins}"
 
         # 2.
-        noglob -zui_std_list_box "lbox1_$mod" ZUI[my_lbox1_width] ZUI[my_lbox1_idx] ZUI[my_lbox1_opts] "" "" "" 'ZUI[my_tfield3_data]="${${(s:;:)ZUI[my_lbox1_opts]}[${ZUI[my_lbox1_idx]}]}"; [[ "${ZUI[my_lbox1_idx]}" = 1 ]] && ZUI[my_tfield3_data]=""; -zpview_info ${ZUI[my_lbox1_idx]};' optional
+        noglob -zui_std_list_box "lbox1_$mod" ZUI[my_lbox1_width] ZUI[my_lbox1_idx] ZUI[my_lbox1_opts] "" "" "" 'ZUI[my_tfield3_data]="${${(s:;:)ZUI[my_lbox1_opts]}[${ZUI[my_lbox1_idx]}]}"; [[ "${ZUI[my_lbox1_idx]}" = 1 ]] && ZUI[my_tfield3_data]=""; .zpview-info ${ZUI[my_lbox1_idx]};' optional
 
         # 3. - 4.
-        -zui_std_button "snippet" "$theme[add-snippet-text-c]" -zpview_action_add_snippet optional
-        -zui_std_button "plugin" "$theme[add-plugin-text-c]" -zpview_action_add_plugin optional
+        -zui_std_button "snippet" "$theme[add-snippet-text-c]" .zpview-action-add-snippet optional
+        -zui_std_button "plugin" "$theme[add-plugin-text-c]" .zpview-action-add-plugin optional
 
         # 5. - 7.
         (( ZUI[my_compact_mode] > 0 )) && {
             local cm_index="${ZUI[my_compact_mode]}"
             [[ "${${theme[compact-mode-text]}[-1]}" = " " ]] && cm_index+=" " || cm_index=" $cm_index"
         }
-        -zui_std_button "delete_mode" "${dl_col}$theme[delete-mode-text]${dl_col:+${ZUI[FMT_END]}}" -zpview_action_delete_mode optional
-        -zui_std_button "edit_mode" "${ed_col}$theme[edit-mode-text]${ed_col:+${ZUI[FMT_END]}}" -zpview_action_edit_mode optional
-        -zui_std_button "compact_mode" "${co_col}$theme[compact-mode-text]$cm_index${co_col:+${ZUI[FMT_END]}}" -zpview_action_compact_mode optional
+        -zui_std_button "delete_mode" "${dl_col}$theme[delete-mode-text]${dl_col:+${ZUI[FMT_END]}}" .zpview-action-delete-mode optional
+        -zui_std_button "edit_mode" "${ed_col}$theme[edit-mode-text]${ed_col:+${ZUI[FMT_END]}}" .zpview-action-edit-mode optional
+        -zui_std_button "compact_mode" "${co_col}$theme[compact-mode-text]$cm_index${co_col:+${ZUI[FMT_END]}}" .zpview-action-compact-mode optional
 
         # 8.
         -zui_std_special_text "$theme[gold-choose-text-c]" optional
@@ -656,12 +656,12 @@ function -zpview_set_zui_settings() {
     reply2=( )               reply3=( 1 )                reply4=( )     reply5="0"
 }
 # }}}
-# FUNCTION: -zpview_generator_A {{{
+# FUNCTION: .zpview-generator-A {{{
 # ZUI generator that creates document block for each plugin,
 # snippet or other command. This is module #2, each document
 # block is an instance of this module (separated by blank
 # lines horizontally, by ZUI normal operation).
--zpview_generator_A() {
+.zpview-generator-A() {
     local mod="$1" ice="$2" arg="$3" t
     local -a cmd output
     local -A object_ices object_data
@@ -716,7 +716,7 @@ function -zpview_set_zui_settings() {
     #
 
     (( theme[delete-unicode-bool] )) && local delete="$theme[delete-unicode-c]" || local delete="$theme[delete-text-c]"
-    -zui_std_button_ext "delete_${mod}_${ice}" "$mod" "$ice" "" "" "$delete" -zpview_action_delete output
+    -zui_std_button_ext "delete_${mod}_${ice}" "$mod" "$ice" "" "" "$delete" .zpview-action-delete output
     if (( ZUI[my_delete_mode] )); then
         output[2]+=" "
     else
@@ -839,11 +839,11 @@ function -zpview_set_zui_settings() {
     [[ "${ZUI[my_compact_mode]}" != "2" || "$ice" -eq 1 ]] && reply5="1" || reply5="0"
 }
 # }}}
-# FUNCTION: -zpview_generator_B {{{
+# FUNCTION: .zpview-generator-B {{{
 # ZUI generator that creates preview text. This is module 3.
 # There is 0 or 1 instance of this module, depending on chosen
 # view.
--zpview_generator_B() {
+.zpview-generator-B() {
     local mod="$1" ice="$2" arg="$3" sh_col di_col
 
     -zui_util_map_bools '[[ ${ZUI[my_incl_comm]} != 1 ]];[[ ${ZUI[my_show_diff]} != 1 ]]' \
@@ -857,12 +857,12 @@ function -zpview_set_zui_settings() {
 
     if (( ZUI[my_show_diff] )); then
         if [[ "$arg" = "difftoggle" || "$arg" = "commtoggle" ]]; then
-            -zpview_compose "${ZUI[my_incl_comm]}" 1
+            .zpview-compose "${ZUI[my_incl_comm]}" 1
             print -rl "${reply[@]}" >! "$ZPVIEW_REPO_DIR"/zshrc_test
         fi
         reply=( "${(f@)"$( diff -u $zshrc_path $ZPVIEW_REPO_DIR/zshrc_test )"}" )
     else
-        -zpview_compose "${ZUI[my_incl_comm]}"
+        .zpview-compose "${ZUI[my_incl_comm]}"
     fi
 
     if [[ "$arg" = "copy" ]]; then
@@ -883,8 +883,8 @@ function -zpview_set_zui_settings() {
     reply2=( )               reply3=( 1 )                reply4=( )
 }
 # }}}
-# FUNCTION: -zpview_generator_OPT {{{
--zpview_generator_OPT() {
+# FUNCTION: .zpview-generator-OPT {{{
+.zpview-generator-OPT() {
     local -a thms tnames layts lnames
     thms=( "$ZPVIEW_REPO_DIR"/themes/*.cr-theme )
     tnames=( "${(o@)${thms[@]:t}%.cr-theme}" )
@@ -898,14 +898,14 @@ function -zpview_set_zui_settings() {
     ZUI[my_lbox4_idx]=${tnames[(i)$ZPVIEW_THEME]}
     eval "ZUI[my_lbox4_opts]=\"$theme[o-theme-box]\${(j:${ZUI[FMT_END]};${theme[o-theme-box]}:)tnames}${ZUI[FMT_END]}\""
     noglob -zui_std_list_box "lbox4_$mod" ZUI[my_lbox4_width] ZUI[my_lbox4_idx] ZUI[my_lbox4_opts] "" "" "" ''
-    -zui_std_button "switch_theme" "$theme[o-switch-text-c]" 'ZUI[my_rerender]=1; -zpview_switch_theme "${${(s:;:)ZUI[my_lbox4_opts]}[${ZUI[my_lbox4_idx]}]}"; reply=( ",all," "" );'
+    -zui_std_button "switch_theme" "$theme[o-switch-text-c]" 'ZUI[my_rerender]=1; .zpview-switch-theme "${${(s:;:)ZUI[my_lbox4_opts]}[${ZUI[my_lbox4_idx]}]}"; reply=( ",all," "" );'
 
     # Switch layout list box
     (( ${+ZUI[my_lbox8_width]} == 0 )) && ZUI[my_lbox8_width]=18
     ZUI[my_lbox8_idx]=${lnames[(i)$ZPVIEW_LAYOUT]}
     eval "ZUI[my_lbox8_opts]=\"$theme[o-layout-box]\${(j:${ZUI[FMT_END]};${theme[o-layout-box]}:)lnames}${ZUI[FMT_END]}\""
     noglob -zui_std_list_box "lbox8_$mod" ZUI[my_lbox8_width] ZUI[my_lbox8_idx] ZUI[my_lbox8_opts] "" "" "" ''
-    -zui_std_button "switch_layout" "$theme[o-switch2-text-c]" 'ZUI[my_rerender]=1; -zpview_switch_layout "${${(s:;:)ZUI[my_lbox8_opts]}[${ZUI[my_lbox8_idx]}]}"; reply=( ",all," "" );'
+    -zui_std_button "switch_layout" "$theme[o-switch2-text-c]" 'ZUI[my_rerender]=1; .zpview-switch-layout "${${(s:;:)ZUI[my_lbox8_opts]}[${ZUI[my_lbox8_idx]}]}"; reply=( ",all," "" );'
 
     # Up / Down list box
     (( ${+ZUI[my_lbox5_width]} == 0 )) && ZUI[my_lbox5_width]=22
@@ -929,7 +929,7 @@ function -zpview_set_zui_settings() {
     noglob -zui_std_list_box "lbox7_$mod" ZUI[my_lbox7_width] ZUI[my_lbox7_idx] ZUI[my_lbox7_opts] "" "" "" 'ZUI[my_rerender]=1; theme[delete-unicode-bool]=$(( ZUI[my_lbox7_idx] - 1 ));'
 
     # Save configuration button
-    -zui_std_button "save_options" "$theme[o-save-text-c]" '-zpview_action_save_options; internal=1;'
+    -zui_std_button "save_options" "$theme[o-save-text-c]" '.zpview-action-save-options; internal=1;'
 
     reply=(
         "Available themes: ${reply[1]} ${reply[2]}"
@@ -949,11 +949,11 @@ function -zpview_set_zui_settings() {
     reply2=( 2 4 6 )         reply3=( 1 7 )              reply4=( )
 }
 # }}}
-# FUNCTION: -zpview_generator_DBG {{{
+# FUNCTION: .zpview-generator-DBG {{{
 # ZUI generator that creates debug-report text. This is module 4.
 # There is 0 or 1 instance of this module, depending on chosen
 # view.
--zpview_generator_DBG() {
+.zpview-generator-DBG() {
     reply=()
 
     # Variables of the text field
@@ -989,8 +989,8 @@ done
 ZUI[reset_current_segment]="no"
 
 ## Start application ##
-zui-event-loop 1:-zpview_generator_0 ${#ENTRIES}:-zpview_generator_A \
-               0:-zpview_generator_B 0:-zpview_generator_DBG 0:-zpview_generator_OPT \
+zui-event-loop 1:.zpview-generator-0 ${#ENTRIES}:.zpview-generator-A \
+               0:.zpview-generator-B 0:.zpview-generator-DBG 0:.zpview-generator-OPT \
                cfg-refresh:palette,log_colors,colorpair,status_colorpair,log_time_format,mark,mark2,altmark,altmark2
 
 -zui_std_cleanup serialize
