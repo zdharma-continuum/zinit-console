@@ -20,6 +20,7 @@ trap "unset -f -- \"\${(k)functions[@]:|zpview_ef}\" &>/dev/null; unset zpview_e
 -zui_std_store_default_app_config b:text_select off
 -zui_std_store_default_app_config b:border 1
 -zui_std_store_default_app_config b:top_anchors 0  # no top-anchors
+-zui_std_store_default_app_config s:status_size 3  # no top-anchors
 
 # Already autoloaded in *.plugin.zsh, here it's for Zshelldoc
 autoload -- -zpview-process-buffer
