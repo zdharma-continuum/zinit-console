@@ -671,24 +671,24 @@ function .zpview-set-zui-settings() {
     local num smarker_text pmarker_text mode_text unloaded_text command_col force_col
 
     # Get n-th TIME_* element, n == instance number
-    local entry="${ENTRIES[$ice]}" URL user plugin
-    local entry2="${entry#TIME_[0-9]##_}"
-    if [[ "$entry2" = (http|https|ftp|ftps|scp|OMZ|PZT):* ]]; then
-        URL="$entry2"
+    local entry="${ENTRIES[$ice]}" URL user plugin 
+    local id_as="${${entry#TIME_[0-9]##_}//---//}" teleid
+
+    local -a tmp
+    tmp=( "${(z@)ZPLG_SICE[$id_as]}" )
+    (( ${#tmp[@]} > 1 && ${#tmp[@]} % 2 == 0 )) && object_ices=( "${(Q)tmp[@]}" )
+
+    teleid="${object_ices[teleid]}"
+
+    if [[ "$teleid" = (http|https|ftp|ftps|scp|OMZ|PZT):* ]]; then
+        URL="$teleid"
         # Remove whitespace from beginning of URL
         URL="${${URL#"${URL%%[! $'\t']*}"}%/}"
 
-        object_data=( "type" "snippet"  "arg" "$URL"  "unloaded" 0 )
+        object_data=( tpe "snippet" arg "$id_as" teleid "$URL"  unloaded 0 )
     else
-        user="${entry2%---*}"
-        plugin="${entry2#*---}"
-
-        object_data=( "type" "plugin"  "arg" "$user/$plugin"  "unloaded" 0 )
+        object_data=( tpe "plugin" arg "$id_as" teleid "$teleid"  unloaded 0 )
     fi
-
-    local -a tmp
-    tmp=( "${(z@)ZPLG_SICE[${${user+$user/$plugin}:-$URL/}]}" )
-    (( ${#tmp[@]} > 1 && ${#tmp[@]} % 2 == 0 )) && object_ices=( "${(Q)tmp[@]}" )
 
     output=()
     reply=()
@@ -766,7 +766,7 @@ function .zpview-set-zui-settings() {
         local w_ices_list="${output[-1]}"
     } || { output+=( "" ); local w_ices_list="{-}"; }
 
-    if [[ "${object_data[type]}" = "snippet" ]]; then
+    if [[ "${object_data[tpe]}" = "snippet" ]]; then
         #
         # 4. Snippet url
         #
@@ -786,7 +786,7 @@ function .zpview-set-zui-settings() {
 
         eval "$theme[layout]"
         [[ "${ZUI[my_compact_mode]}" = [12] ]] && reply=( "${w_snippet_item_short[@]}" ) || reply=( "${w_snippet_item_long[@]}" )
-    elif [[ "${object_data[type]}" = "plugin" ]]; then
+    elif [[ "${object_data[tpe]}" = "plugin" ]]; then
         #
         # 4. Plugin ID
         #
