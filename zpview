@@ -7,7 +7,7 @@
 
 -zui_std_cleanup deserialize:"zplugin-view"
 -zui_std_init app:"zplugin-view" app_name:"Zplugin-Crasis"
-emulate -LR zsh -o extendedglob -o typesetsilent -o warncreateglobal
+emulate -LR zsh -o extendedglob -o typesetsilent -o warncreateglobal -o noshortloops
 -zui_std_init2
 
 # Don't leak any functions
