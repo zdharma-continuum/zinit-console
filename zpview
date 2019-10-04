@@ -689,6 +689,7 @@ function .zpview-set-zui-settings() {
         -zplg-any-to-user-plugin "$teleid"
         user="${reply[-2]}" plugin="${reply[-1]}"
         object_data=( tpe "plugin" arg "$id_as" teleid "$teleid"  unloaded 0 user "$user" plugin "$plugin" )
+        (( !${ZPLG_REGISTERED_PLUGINS[(I)$id_as]} )) && object_data[unloaded]=1
     fi
 
     output=()
@@ -707,12 +708,19 @@ function .zpview-set-zui-settings() {
     (( theme[lu-unicode-bool] )) && local loaded="$theme[loaded-unicode-c]" || local loaded="$theme[loaded-text-c]"
     (( theme[lu-unicode-bool] )) && local unloaded="$theme[unloaded-unicode-c]" || local unloaded="$theme[unloaded-text-c]"
 
-    [[ -z "${ZUI[toggle_dis_${mod}_${ice}]}" ]] && ZUI[toggle_dis_${mod}_${ice}]="${object_data[unloaded]:-0}"
-    -zui_util_map_bools "[[ \"${ZUI[toggle_dis_${mod}_${ice}]}\" = 1 ]]" "unloaded_text" "$unloaded" "$loaded"
-    -zui_util_map_bools "[[ \"${ZUI[toggle_dis_${mod}_${ice}]}\" = 1 && \"${ZUI[my_compact_mode]}\" = [12] ]]" "smarker_text" "$theme[s-marker-unloaded-text-c]" "$theme[s-marker-text-c]"
-    -zui_util_map_bools "[[ \"${ZUI[toggle_dis_${mod}_${ice}]}\" = 1 && \"${ZUI[my_compact_mode]}\" = [12] ]]" "pmarker_text" "$theme[p-marker-unloaded-text-c]" "$theme[p-marker-text-c]"
+    [[ -z "${ZUI[toggle_unld_${mod}_${ice}]}" ]] && ZUI[toggle_unld_${mod}_${ice}]="${object_data[unloaded]:-0}"
+    -zui_util_map_bools "[[ \"${object_data[unloaded]}\" = 1 ]]" "unloaded_text" "$unloaded" "$loaded"
+    -zui_util_map_bools "[[ \"${object_data[unloaded]}\" = 1 && \"${ZUI[my_compact_mode]}\" = [12] ]]" "smarker_text" "$theme[s-marker-unloaded-text-c]" "$theme[s-marker-text-c]"
+    -zui_util_map_bools "[[ \"${object_data[unloaded]}\" = 1 && \"${ZUI[my_compact_mode]}\" = [12] ]]" "pmarker_text" "$theme[p-marker-unloaded-text-c]" "$theme[p-marker-text-c]"
 
-    -zui_std_button "toggle_dis_${mod}_${ice}" "$unloaded_text" '(( ZUI[toggle_dis_'"${mod}_${ice}"']=1-${ZUI[toggle_dis_'"${mod}_${ice}"']} )); -zui_std_fly_mod_regen '"\"$mod\" \"$ice\""'; internal=1' output
+    -zui_std_button "toggle_unld_${mod}_${ice}" "$unloaded_text" \
+        "(( ${object_data[unloaded]} )) && { \
+            ZPLG_ICES=( ${(j: :)${(@qkv)object_ices[@]}} ); \
+            unset 'ZPLG_ICES[wait]'; \
+            zplugin load \"${object_data[arg]}\" &>/dev/null; ((1)); } || \
+                zplugin unload \"${object_data[arg]}\" &>/dev/null; \
+                -zui_std_fly_mod_regen \"$mod\" \"$ice\""'; internal=1' \
+        output
 
     #
     # 2. Delete
