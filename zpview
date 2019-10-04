@@ -11,11 +11,10 @@ emulate -LR zsh -o extendedglob -o typesetsilent -o warncreateglobal -o noshortl
 -zui_std_init2
 
 # Don't leak any functions
-local -a entry_funs
-entry_funs=( ${(k)functions} )
-trap "unset -f -- \"\${(k)functions[@]:#(${(j:|:)${(q@)entry_funs}})}\" &>/dev/null" EXIT
-trap "unset -f -- \"\${(k)functions[@]:#(${(j:|:)${(q@)entry_funs}})}\" &>/dev/null; return 1" INT
-unset entry_funs
+typeset -g zpview_ef
+zpview_ef=( ${(k)functions} )
+trap "unset -f -- \"\${(k)functions[@]:|zpview_ef}\" &>/dev/null; unset zpview_ef" EXIT
+trap "unset -f -- \"\${(k)functions[@]:|zpview_ef}\" &>/dev/null; unset zpview_ef; return 1" INT
 
 -zui_std_store_default_app_config b:text_mode off
 -zui_std_store_default_app_config b:text_select off
