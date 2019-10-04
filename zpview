@@ -661,10 +661,8 @@ function .zpview-set-zui-settings() {
 }
 # }}}
 # FUNCTION: .zpview-generator-A {{{
-# ZUI generator that creates document block for each plugin,
-# snippet or other command. This is module #2, each document
-# block is an instance of this module (separated by blank
-# lines horizontally, by ZUI normal operation).
+# ZUI generator that creates document block for each plugin or snippet.
+# This is module #2, each document block is an instance of this module.
 .zpview-generator-A() {
     local mod="$1" ice="$2" arg="$3" t
     local -a cmd output
