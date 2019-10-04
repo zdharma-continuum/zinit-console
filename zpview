@@ -687,7 +687,9 @@ function .zpview-set-zui-settings() {
 
         object_data=( tpe "snippet" arg "$id_as" teleid "$URL"  unloaded 0 )
     else
-        object_data=( tpe "plugin" arg "$id_as" teleid "$teleid"  unloaded 0 )
+        -zplg-any-to-user-plugin "$teleid"
+        user="${reply[-2]}" plugin="${reply[-1]}"
+        object_data=( tpe "plugin" arg "$id_as" teleid "$teleid"  unloaded 0 user "$user" plugin "$plugin" )
     fi
 
     output=()
