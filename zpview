@@ -280,7 +280,6 @@ function .zpview-process-theme() {
         done
     done
 
-    chosen_plugins[1]="$theme[gold-list-info-text]"
     [[ -n "$theme[i-unknown]" ]] && {
         theme[i-unknown-text-c]="${theme[i-unknown-text]//\%s/${theme[i-unknown]}%s$ZUI[FMT_END]}"
     } || theme[i-unknown-text-c]="$theme[i-unknown-text]"
