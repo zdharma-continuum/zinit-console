@@ -501,11 +501,7 @@ function .zpview-set-zui-settings() {
 
     .zpview-clear-visual-state
 
-    for (( i=1; i<=size; ++ i )); do
-        rtext+="mod${mod}_ice${i},"
-    done
-
-    reply=( "$rtext" "" )
+    reply=( ",all," "" )
 }
 # }}}
 # FUNCTION: .zpview-action-delete-mode {{{
