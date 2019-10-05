@@ -7,7 +7,7 @@
 
 -zui_std_cleanup deserialize:"zplugin-view"
 -zui_std_init app:"zplugin-view" app_name:"Zplugin-Crasis"
-emulate -LR zsh -o extendedglob -o typesetsilent -o warncreateglobal -o noshortloops
+emulate -LR zsh -o extendedglob -o typesetsilent -o warncreateglobal -o noshortloops -o rcquotes
 -zui_std_init2
 
 # Don't leak any functions
@@ -714,12 +714,17 @@ function .zpview-set-zui-settings() {
     -zui_util_map_bools "[[ \"${object_data[unloaded]}\" = 1 && \"${ZUI[my_compact_mode]}\" = [12] ]]" "pmarker_text" "$theme[p-marker-unloaded-text-c]" "$theme[p-marker-text-c]"
 
     -zui_std_button "toggle_unld_${mod}_${ice}" "$unloaded_text" \
-        "(( ${object_data[unloaded]} )) && { \
-            ZPLG_ICES=( ${(j: :)${(@qkv)object_ices[@]}} ); \
-            unset 'ZPLG_ICES[wait]'; \
-            zplugin load \"${object_data[arg]}\" &>/dev/null; ((1)); } || \
-                zplugin unload \"${object_data[arg]}\" &>/dev/null; \
-                -zui_std_fly_mod_regen \"$mod\" \"$ice\""'; internal=1' \
+        "(( ${object_data[unloaded]} )) && { 
+                ZPLG_ICES=( ${(j: :)${(@qkv)object_ices[@]}} )
+                unset 'ZPLG_ICES[wait]'
+                zplugin load \"${object_data[arg]}\" &>/dev/null "'
+                -zui_std_stalog "" "" "" "Loaded the plugin."
+                ((1))
+            } || {'"
+                zplugin unload \"${object_data[arg]}\" &>/dev/null"'
+                -zui_std_stalog "Unloaded the plugin." " It''s report stored into" "" " \$LASTREPORT" 
+            }'"
+            -zui_std_fly_mod_regen \""$mod"\" \""$ice"\"; internal=1" \
         output
 
     #
