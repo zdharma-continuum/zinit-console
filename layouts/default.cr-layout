@@ -20,36 +20,3 @@ w_plugin_item_long=(
 w_plugin_item_short=(
     "$num $w_up $w_down $pmarker_text $w_plugin $w_ices_list"
 )
-
-# cdreplay in the listing
-
-w_cdreplay_item_long=( 
-    "$num $w_up $w_down cdreplay${w_q:+ -q}"
-    "$w_delete$w_unload"
-)
-
-w_cdreplay_item_short=( 
-    "$num $w_up $w_down cdreplay${w_q:+ -q}"
-)
-
-# cdclear in the listing
-
-w_cdclear_item_long=( 
-    "$num $w_up $w_down cdclear${w_q:+ -q}"
-    "$w_delete$w_unload"
-)
-
-w_cdclear_item_short=( 
-    "$num $w_up $w_down cdclear${w_q:+ -q}"
-)
-
-# regular command in listing
-
-w_other_item_long=( 
-    "$num $w_up $w_down $text"
-    "$w_delete$w_unload"
-)
-
-w_other_item_short=( 
-    "$num $w_up $w_down $text"
-)
