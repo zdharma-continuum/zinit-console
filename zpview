@@ -99,7 +99,7 @@ typeset -ga reply
 # Load and process theme
 #
 
-local ZPVIEW_THEME="$ZPVIEW_THEME" ZPVIEW_LAYOUT="${ZPVIEW_LAYOUT:-default}"
+local ZPVIEW_THEME="$ZPVIEW_THEME" ZPVIEW_LAYOUT="$ZPVIEW_LAYOUT"
 
 local -a thcol_entries thcol_entries2 thbcol_entries thtxt_entries thtxt_entries2
 thcol_entries=(
@@ -165,6 +165,7 @@ function .zpview-process-theme() {
         source "$ZPVIEW_REPO_DIR/zpview.conf"
         # Global and from-interface $ZPVIEW_THEME overrides configuration file
         ZPVIEW_THEME=${ZPVIEW_THEME:-$theme_name}
+        ZPVIEW_LAYOUT=${ZPVIEW_LAYOUT:-$layout_name}
         # For unicode glyphs, respect configuration file only at start
         theme_save[ud-unicode-bool]="${theme_save[ud-unicode-bool]:-$move_unicode_buttons}"
         theme_save[lu-unicode-bool]="${theme_save[lu-unicode-bool]:-$toggle_unicode_buttons}"
@@ -193,7 +194,7 @@ function .zpview-process-theme() {
     source "$ZPVIEW_REPO_DIR/themes/${ZPVIEW_THEME}.cr-theme"
     theme+=( "${(kv)my_zpview_theme_data[@]}" )
     theme[i-blockf]="${${(s;:;)theme[i-id]}[5]}"
-    theme[layout]="$(<$ZPVIEW_REPO_DIR/layouts/${ZPVIEW_LAYOUT}.cr-layout)"
+    theme[layout]="$(<$ZPVIEW_REPO_DIR/layouts/$ZPVIEW_LAYOUT.cr-layout)"
 
     # Stats on color settings
     local -a provided missing
@@ -384,7 +385,7 @@ function .zpview-set-zui-settings() {
 .zpview-action-save-options() {
     local out="$ZPVIEW_REPO_DIR/zpview.conf"
     print -r -- "local theme_name=${ZPVIEW_THEME}   # Name of active theme. \$ZPVIEW_THEME overrides." >| "$out"
-    print -r -- "local move_unicode_buttons=${theme[ud-unicode-bool]}   # Use unicode glyphs for up & down buttons?" >>| "$out"
+    print -r -- "local layout_name=${ZPVIEW_LAYOUT}  # Name of active layout. \$ZPVIEW_LAYOUT overrides." >>| "$out"
     print -r -- "local toggle_unicode_buttons=${theme[lu-unicode-bool]} # Use unicode glyphs for enable & disable buttons?" >>| "$out"
     print -r -- "local delete_unicode_button=${theme[delete-unicode-bool]}  # Use unicode glyphs for disable button?" >>| "$out"
     -zui_std_stalog "Configuration saved to: " "$out"
