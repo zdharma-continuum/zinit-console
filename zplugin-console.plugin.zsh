@@ -28,9 +28,9 @@ fi
 
 [[ -z "${fg_bold[green]}" ]] && builtin autoload -Uz colors && colors
 
-autoload -- zpview -zpview-process-buffer
+autoload -- zpconsole .zpconsole-process-buffer
 
-zle -N zpview
-bindkey "^O^J" zpview
+zle -N zpconsole
+bindkey "^O^J" zpconsole
 
 # vim:ft=zsh
