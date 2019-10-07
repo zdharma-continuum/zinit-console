@@ -28,7 +28,7 @@ fi
 
 [[ -z "${fg_bold[green]}" ]] && builtin autoload -Uz colors && colors
 
-autoload -- zpconsole .zpconsole-process-buffer
+autoload -- zpconsole
 
 zle -N zpconsole
 bindkey "^O^J" zpconsole

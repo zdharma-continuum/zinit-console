@@ -22,9 +22,6 @@ trap "unset -f -- \"\${(k)functions[@]:|zpconsole_ef}\" &>/dev/null; unset zpcon
 -zui_std_store_default_app_config b:top_anchors 0  # no top-anchors
 -zui_std_store_default_app_config s:status_size 3  # no top-anchors
 
-# Already autoloaded in *.plugin.zsh, here it's for Zshelldoc
-autoload -- -zpconsole-process-buffer
-
 # Debug array, for debug view
 local -a ZCR_DEBUG_MSGS
 
