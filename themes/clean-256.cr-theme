@@ -53,7 +53,7 @@ my_zpview_theme_data=(
     down-text               "D"
     down-unicode            "↓"
     delete                  red
-    delete-text             " X "
+    delete-text             " X"
     delete-unicode          "⌫  "
     plus-ice                "yellow"
     plus-ice-text           "<+Ice>"
