@@ -5,8 +5,8 @@
 #
 # Copyright (c) 2018 Sebastian Gniazdowski
 
--zui_std_cleanup deserialize:"zplugin-view"
--zui_std_init app:"zplugin-view" app_name:"Zplugin-Crasis"
+-zui_std_cleanup deserialize:"zplugin-console"
+-zui_std_init app:"zplugin-console" app_name:"Zplugin Console"
 emulate -LR zsh -o extendedglob -o typesetsilent -o warncreateglobal -o noshortloops -o rcquotes
 -zui_std_init2
 
@@ -481,7 +481,7 @@ function .zpconsole-set-zui-settings() {
         [[ -z "$ver" ]] && ver="unknown (no .git/refs/heads/master)" || ver="${ver[1,7]}"
         ZCR_DEBUG_MSGS=( "${ZCR_DEBUG_MSGS[@]/<ZPLGVERSION>/$ver}" )
 
-        { local ver="$(<${ZPLGM[PLUGINS_DIR]}/zdharma---zplugin-view/.git/refs/heads/master)" } 2>/dev/null
+        { local ver="$(<${ZPLGM[PLUGINS_DIR]}/zdharma---zplugin-console/.git/refs/heads/master)" } 2>/dev/null
         [[ -z "$ver" ]] && ver="unknown (no .git/refs/heads/master)" || ver="${ver[1,7]}"
         ZCR_DEBUG_MSGS=( "${ZCR_DEBUG_MSGS[@]/<ZCRVERSION>/$ver}" )
     else
