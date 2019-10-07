@@ -10,7 +10,7 @@ w_snippet_item_long=(
 )
 
 w_snippet_item_short=(
-    "$num $w_up $w_down $smarker_text $w_url"
+    "$num ${w_delete:+$w_delete }$smarker_text $w_url"
 )
 
 # Plugin in the listing
@@ -21,5 +21,5 @@ w_plugin_item_long=(
 )
 
 w_plugin_item_short=(
-    "$num $pmarker_text $w_plugin"
+    "$num ${w_delete:+$w_delete }$pmarker_text $w_plugin"
 )
