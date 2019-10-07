@@ -517,10 +517,7 @@ function .zpconsole-set-zui-settings() {
     local -a keys
     local k
     for (( i=1; i<=size+15; i++ )); do
-        unset "ZUI[toggle_dis_2_${i}]"
-        unset "ZUI[toggle_command_2_${i}]"
-        unset "ZUI[toggle_force_2_${i}]"
-        unset "ZUI[toggle_mode_2_${i}]"
+        unset "ZUI[toggle_unld_2_${i}]"
 
         unset "ZUI[my_tfield2_${i}_width]"
         unset "ZUI[my_tfield2_${i}_start]"
@@ -530,11 +527,10 @@ function .zpconsole-set-zui-settings() {
         unset "ZUI[my_lbox2_2_${i}_idx]"
         unset "ZUI[my_lbox2_2_${i}_opts]"
 
-        unset "ZUI[my_lbox3_2_${i}_width]"
-        unset "ZUI[my_lbox3_2_${i}_idx]"
-        unset "ZUI[my_lbox3_2_${i}_opts]"
+        keys=( ${ZUI[(I)my_tfield2_${i}_*_width]}
+            ${ZUI[(I)my_tfield2_${i}_*_start]}
+            ${ZUI[(I)my_tfield2_${i}_*_data]} )
 
-        keys=( ${ZUI[(I)my_tfield4_${i}_*_width]} ${ZUI[(I)my_tfield4_${i}_*_start]} ${ZUI[(I)my_tfield4_${i}_*_data]} )
         for k in "${keys[@]}"; do
             unset "ZUI[$k]"
         done
