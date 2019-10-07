@@ -582,6 +582,8 @@ function .zpconsole-set-zui-settings() {
     -zui_std_button "options" "${op_col}$theme[options-text]${op_col:+${ZUI[FMT_END]}}" .zpconsole-action-options-view
     -zui_std_button "debug" "${dg_col}$theme[debug-text]${dg_col:+${ZUI[FMT_END]}}" .zpconsole-action-debug-view
 
+    [[ -n "$theme[menu-bg]" ]] && local spc="$theme[menu-bg] ${ZUI[FMT_END]}" || local spc=" "
+
     (( ZUI[my_in_debug] + ZUI[my_in_options] == 0 )) && {
         # Variables of the list box
         (( ${+ZUI[my_lbox1_width]} == 0 )) && ZUI[my_lbox1_width]=$(( 25 < ${#chosen_plugins[1]} ? ${#chosen_plugins[1]} : 25 ))
@@ -596,18 +598,14 @@ function .zpconsole-set-zui-settings() {
         -zui_std_button "delete_mode" "${dl_col}$theme[delete-mode-text]${dl_col:+${ZUI[FMT_END]}}" .zpconsole-action-delete-mode optional
         -zui_std_button "compact_mode" "${co_col}$theme[compact-mode-text]$cm_index${co_col:+${ZUI[FMT_END]}}" .zpconsole-action-compact-mode optional
 
-        [[ -n "$theme[menu2-bg]" ]] && local spc2="$theme[menu2-bg] ${ZUI[FMT_END]}" || local spc2=" "
-
-        local line1="${optional[5]}$spc2${optional[1]}$spc2${optional[2]}"
+        local line1="${optional[5]}$spc${optional[1]}$spc${optional[2]}"
         local line2=""
     } || {
         local line1="" line2=""
     }
 
-    [[ -n "$theme[menu-bg]" ]] && local spc="$theme[menu-bg] ${ZUI[FMT_END]}" || local spc=" "
     reply=(
-        "${reply[1]}$spc${reply[2]}$spc${reply[3]}$spc${reply[4]}$spc${reply[5]}"
-        $line1
+        "${reply[1]}$spc${reply[2]}$spc${reply[3]}$spc${reply[4]}$spc${reply[5]}$spc$line1"
         $line2
     )
 

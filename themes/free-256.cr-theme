@@ -7,7 +7,7 @@ my_zpconsole_theme_data=(
     menu-bg                 blue
     menu-active-button-fg   black
     menu-active-button-bg   yellow
-    menu2-bg                ""
+    menu2-bg                blue
     menu2-active-button-fg  black
     menu2-active-button-bg  yellow
     options                 cyan
