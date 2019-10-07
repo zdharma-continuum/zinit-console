@@ -640,29 +640,18 @@ function .zpview-set-zui-settings() {
         (( ${+ZUI[my_lbox1_idx]} == 0 )) && ZUI[my_lbox1_idx]=1
         (( ${+ZUI[my_lbox1_opts]} == 0 )) && ZUI[my_lbox1_opts]="${(j:;:)chosen_plugins}"
 
-        # 2.
-        noglob -zui_std_list_box "lbox1_$mod" ZUI[my_lbox1_width] ZUI[my_lbox1_idx] ZUI[my_lbox1_opts] "" "" "" 'ZUI[my_tfield3_data]="${${(s:;:)ZUI[my_lbox1_opts]}[${ZUI[my_lbox1_idx]}]}"; [[ "${ZUI[my_lbox1_idx]}" = 1 ]] && ZUI[my_tfield3_data]=""; .zpview-info ${ZUI[my_lbox1_idx]};' optional
-
-        # 3. - 4.
-        -zui_std_button "snippet" "$theme[add-snippet-text-c]" .zpview-action-add-snippet optional
-        -zui_std_button "plugin" "$theme[add-plugin-text-c]" .zpview-action-add-plugin optional
-
-        # 5. - 7.
+        # 5. - 6.
         (( ZUI[my_compact_mode] > 0 )) && {
             local cm_index="${ZUI[my_compact_mode]}"
             [[ "${${theme[compact-mode-text]}[-1]}" = " " ]] && cm_index+=" " || cm_index=" $cm_index"
         }
         -zui_std_button "delete_mode" "${dl_col}$theme[delete-mode-text]${dl_col:+${ZUI[FMT_END]}}" .zpview-action-delete-mode optional
-        -zui_std_button "edit_mode" "${ed_col}$theme[edit-mode-text]${ed_col:+${ZUI[FMT_END]}}" .zpview-action-edit-mode optional
         -zui_std_button "compact_mode" "${co_col}$theme[compact-mode-text]$cm_index${co_col:+${ZUI[FMT_END]}}" .zpview-action-compact-mode optional
-
-        # 8.
-        -zui_std_special_text "$theme[gold-choose-text-c]" optional
 
         [[ -n "$theme[menu2-bg]" ]] && local spc2="$theme[menu2-bg] ${ZUI[FMT_END]}" || local spc2=" "
 
-        local line1="${optional[5]}$spc2${optional[6]}$spc2${optional[7]}"
-        local line2="${optional[1]} ${optional[3]} ${optional[4]}  ${optional[8]} ${optional[2]}"
+        local line1="${optional[5]}$spc2${optional[1]}$spc2${optional[2]}"
+        local line2=""
     } || {
         local line1="" line2=""
     }
@@ -671,8 +660,7 @@ function .zpview-set-zui-settings() {
     reply=(
         "${reply[1]}$spc${reply[2]}$spc${reply[3]}$spc${reply[4]}$spc${reply[5]}"
         "$line1"
-        ""
-        "$line2"
+        $line2
     )
 
     [[ -z "$line1" && -z "$line2" ]] && reply[2,4]=()
