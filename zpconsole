@@ -572,7 +572,7 @@ function .zpconsole-set-zui-settings() {
     -zui_util_map_bools '[[ "${ZUI[my_edit_mode]}" = "1" ]]' ed_col \
                                                 "$act_fg_bg2" \
                                                 "$theme[edit-mode]$theme[menu2-bg]"
-    -zui_util_map_bools '[[ "${ZUI[my_compact_mode]}" = [01] ]]' co_col \
+    -zui_util_map_bools '[[ "${ZUI[my_compact_mode]}" = [12] ]]' co_col \
                                                 "$act_fg_bg2" \
                                                 "$theme[compact-mode]$theme[menu2-bg]"
 
