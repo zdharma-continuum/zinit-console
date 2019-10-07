@@ -720,9 +720,6 @@ function .zpview-set-zui-settings() {
     # Number
     [[ -n "$theme[index]" ]] && num="$theme[index]${(l:2::0:)ice}${ZUI[FMT_END]}." || num="${(l:2::0:)ice}."
 
-    local gap
-    (( gap = ZUI[my_compact_mode] == 2 ? 0 : 1 ))
-
     #
     # 1. "Loaded" or "Unloaded"
     #
