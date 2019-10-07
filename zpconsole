@@ -727,11 +727,7 @@ function .zpconsole-set-zui-settings() {
         # 4. Snippet url
         #
 
-        (( ${+ZUI[my_tfield2${ice}_width]} == 0 )) && ZUI[my_tfield2${ice}_width]=40
-        (( ${+ZUI[my_tfield2${ice}_start]} == 0 )) && ZUI[my_tfield2${ice}_start]=1
-        (( ${+ZUI[my_tfield2${ice}_data]} == 0 )) &&  ZUI[my_tfield2${ice}_data]="${object_data[arg]}"
-
-        noglob -zui_std_text_field "url_id_${ice}" ZUI[my_tfield2${ice}_width] ZUI[my_tfield2${ice}_start] ZUI[my_tfield2${ice}_data] "" "" "" '' output
+        noglob -zui_std_special_text "${(r:40:: :)object_data[arg]}" output
         [[ -n "$theme[s-url]" ]] && output[-1]="$theme[s-url]${output[-1]}${ZUI[FMT_END]}"
 
         #
@@ -747,11 +743,7 @@ function .zpconsole-set-zui-settings() {
         # 4. Plugin ID
         #
         
-        (( ${+ZUI[my_tfield2${ice}_width]} == 0 )) && ZUI[my_tfield2${ice}_width]=40
-        (( ${+ZUI[my_tfield2${ice}_start]} == 0 )) && ZUI[my_tfield2${ice}_start]=1
-        (( ${+ZUI[my_tfield2${ice}_data]} == 0 )) &&  ZUI[my_tfield2${ice}_data]="${object_data[arg]}"
-
-        noglob -zui_std_text_field "url_id_${ice}" ZUI[my_tfield2${ice}_width] ZUI[my_tfield2${ice}_start] ZUI[my_tfield2${ice}_data] "" "" "" '' output
+        noglob -zui_std_special_text "${(r:40:: :)object_data[arg]}" output
         [[ -n "$theme[p-id]" ]] && output[-1]="$theme[p-id]${output[-1]}${ZUI[FMT_END]}"
 
         #
