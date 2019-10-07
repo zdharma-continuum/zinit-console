@@ -826,28 +826,6 @@ function .zpview-set-zui-settings() {
         local w_plugin="${output[4]}"
 
         eval "$theme[layout]"
-        [[ "${ZUI[my_compact_mode]}" = [12] ]] && reply=( "${w_plugin_item_short[@]}" ) || reply=( "${w_plugin_item_long[@]}" )
-    elif [[ "${object_data[sub]}" = "cdreplay" ]]; then
-        local w_q="${object_data[-q]}"
-        eval "$theme[layout]"
-        [[ "${ZUI[my_compact_mode]}" = [12] ]] && reply=( "${w_cdreplay_item_short[@]}" ) || reply=( "${w_cdreplay_item_long[@]}" )
-    elif [[ "${object_data[sub]}" = "cdclear" ]]; then
-        local w_q="${object_data[-q]}"
-        eval "$theme[layout]"
-        [[ "${ZUI[my_compact_mode]}" = [12] ]] && reply=( "${w_cdclear_item_short[@]}" ) || reply=( "${w_cdclear_item_long[@]}" )
-    else
-        # Custom command
-        local -a keys
-        local key text="${object_data[c]}"
-        [[ -n "${object_data[unkn]}" ]] && text+=" ${object_data[unkn]}"
-        keys=( "${(kon)object_data[@]}" )
-        for key in "${keys[@]}"; do
-            [[ "$key" != arg_* ]] && continue
-            text+=" ${object_data[$key]}"
-        done
-        [[ -n "${object_data[unkn]}" ]] && text+=" (${ZUI[RED]}unknown Zplugin subcommand${ZUI[FMT_END]})"
-
-        eval "$theme[layout]"
         [[ "${ZUI[my_compact_mode]}" = [01] ]] && reply=( "${w_plugin_item_short[@]}" ) || reply=( "${w_plugin_item_long[@]}" )
     fi
 
