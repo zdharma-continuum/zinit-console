@@ -127,7 +127,7 @@ thbcol_entries=( menu-bg menu-active-button-bg menu2-bg menu2-active-button-bg )
 
 thtxt_entries=(
     # Top bar
-    reload-text save-text preview-text options-text debug-text delete-mode-text edit-mode-text compact-mode-text
+    reload-text options-text debug-text delete-mode-text edit-mode-text compact-mode-text
     # Add bar
     add-snippet-text add-plugin-text new-id-url-text gold-choose-text gold-list-info-text
     # Listing
@@ -392,65 +392,31 @@ function .zpconsole-set-zui-settings() {
 .zpconsole-process-theme || return 1
 .zpconsole-set-zui-settings
 
-# FUNCTION: .zpconsole-action-preview {{{
-# Enters or leaves preview alternate-view. It basically
-# sets preview module's instance to be created, once.
-# At the same time, the plugin-list module is set to 0
-# instances. Number of instances is the "module factor".
-.zpconsole-action-preview() {
-    -zui_std_set_mod_factor 4 0
-    -zui_std_set_mod_factor 5 0
-    ZUI[my_in_debug]=0
-    ZUI[my_in_options]=0
-    if [[ "${ZUI[my_in_preview]}" != 1 ]]; then
-        -zui_std_set_mod_factor 2 0
-        -zui_std_set_mod_factor 3 1
-        ZUI[my_in_preview]=1
-        ZUI[COLORING_PATTERN]='(#s)\#?##' ZUI[COLORING_MATCH_MULTIPLE]=0 ZUI[COLORING_COLOR]="$theme[pv-comment]"
-    else
-        -zui_std_set_mod_factor 2 $(( ${#cmdlist} / 3 ))
-        -zui_std_set_mod_factor 3 0
-        ZUI[my_in_preview]=0
-        ZUI[COLORING_PATTERN]=''
-    fi
-
-    if [[ "${ZUI[my_in_preview]}" = "0" && "${ZUI[my_rerender]}" = "1" ]]; then
-        ZUI[my_rerender]=0
-        # Regenerate all modules with active instances - it will be mod1 and mod2
-        reply=( ",all," "" )
-    else
-        # Regenerate menu and preview module
-        reply=( ",mod1_ice1,mod3_ice1," "" )
-    fi
-}
-# }}}
 # FUNCTION: .zpconsole-action-options-view {{{
 # Enters or leaves options alternate-view. It basically
 # sets option module's instance to be created, once (when
 # entering) - by changing the module factor.
 .zpconsole-action-options-view() {
-    -zui_std_set_mod_factor 3 0
-    -zui_std_set_mod_factor 4 0
+    -zui_std_set_mod_factor 3 0 # debug view
     ZUI[my_in_debug]=0
-    ZUI[my_in_preview]=0
     if [[ "${ZUI[my_in_options]}" != 1 ]]; then
         -zui_std_set_mod_factor 2 0 # plugin list
-        -zui_std_set_mod_factor 5 1 # options
+        -zui_std_set_mod_factor 4 1 # options
         ZUI[my_in_options]=1
         ZUI[COLORING_PATTERN]=''
     else
         -zui_std_set_mod_factor 2 $(( ${#cmdlist} / 3 ))
-        -zui_std_set_mod_factor 5 0
+        -zui_std_set_mod_factor 4 0
         ZUI[my_in_options]=0
     fi
 
-    if [[ "${ZUI[my_in_preview]}" = "0" && "${ZUI[my_rerender]}" = "1" ]]; then
+    if [[ "${ZUI[my_rerender]}" = "1" ]]; then
         ZUI[my_rerender]=0
         # Regenerate all modules with active instances - it will be mod1 and mod2
         reply=( ",all," "" )
     else
         # Regenerate menu and options module
-        reply=( ",mod1_ice1,mod5_ice1," "" )
+        reply=( ",mod1_ice1,mod4_ice1," "" )
     fi
 }
 # }}}
@@ -461,14 +427,12 @@ function .zpconsole-set-zui-settings() {
 # to module's generator. Debug module (#4) obtains factor 1.
 # On disable, normal factors are restored.
 .zpconsole-action-debug-view() {
-    -zui_std_set_mod_factor 3 0
-    -zui_std_set_mod_factor 5 0
-    ZUI[my_in_preview]=0
+    -zui_std_set_mod_factor 4 0
     ZUI[my_in_options]=0
 
     if [[ "${ZUI[my_in_debug]}" != 1 ]]; then
         -zui_std_set_mod_factor 2 0
-        -zui_std_set_mod_factor 4 1
+        -zui_std_set_mod_factor 3 1
         ZUI[my_in_debug]=1
         ZUI[COLORING_PATTERN]=''
 
@@ -486,17 +450,16 @@ function .zpconsole-set-zui-settings() {
         ZCR_DEBUG_MSGS=( "${ZCR_DEBUG_MSGS[@]/<ZCRVERSION>/$ver}" )
     else
         -zui_std_set_mod_factor 2 $(( ${#cmdlist} / 3 ))
-        -zui_std_set_mod_factor 4 0
         ZUI[my_in_debug]=0
     fi
 
-    if [[ "${ZUI[my_in_preview]}" = "0" && "${ZUI[my_rerender]}" = "1" ]]; then
+    if [[ "${ZUI[my_rerender]}" = "1" ]]; then
         ZUI[my_rerender]=0
         # Regenerate all modules with active instances - it will be mod1 and mod2
         reply=( ",all," "" )
     else
         # Regenerate menu and debug module
-        reply=( ",mod1_ice1,mod4_ice1," "" )
+        reply=( ",mod1_ice1,mod3_ice1," "" )
     fi
 }
 # }}}
@@ -590,7 +553,7 @@ function .zpconsole-set-zui-settings() {
 # FUNCTION: .zpconsole-generator-0 {{{
 # ZUI generator that creates top menu (its hypertext).
 # The menu can differ depending on current view mode
-# (normal, preview, debug).
+# (normal, debug, options).
 .zpconsole-generator-0() {
     local mod="$1" ice="$2"
     local pv_col op_col dg_col dl_col ed_col co_col
@@ -601,9 +564,6 @@ function .zpconsole-set-zui-settings() {
     local act_fg_bg="$theme[menu-active-button-fg]$theme[menu-active-button-bg]"
     local act_fg_bg2="$theme[menu2-active-button-fg]$theme[menu2-active-button-bg]"
 
-    -zui_util_map_bools '[[ ${ZUI[my_in_preview]} = 1 ]]' pv_col \
-                                                "$act_fg_bg" \
-                                                "$theme[preview]$theme[menu-bg]"
     -zui_util_map_bools '[[ ${ZUI[my_in_options]} = 1 ]]' op_col \
                                                 "$act_fg_bg" \
                                                 "$theme[options]$theme[menu-bg]"
@@ -620,25 +580,19 @@ function .zpconsole-set-zui-settings() {
                                                 "$act_fg_bg2" \
                                                 "$theme[compact-mode]$theme[menu2-bg]"
 
-    # 1. - 5.
+    # 1. - 2.
     local close
     [[ -n "$theme[menu-bg]" || -n "$theme[reload]" ]] && close="${ZUI[FMT_END]}" || close=""
-    -zui_std_button "reload" "$theme[reload]$theme[menu-bg]$theme[reload-text]$close" .zpconsole-action-reload
-
-    [[ -n "$theme[menu-bg]" || -n "$theme[save]" ]] && close="${ZUI[FMT_END]}" || close=""
-    -zui_std_button "save" "$theme[save]$theme[menu-bg]$theme[save-text]$close" '.zpconsole-action-save; internal=1'
-
-    -zui_std_button "preview" "${pv_col}$theme[preview-text]${pv_col:+${ZUI[FMT_END]}}" .zpconsole-action-preview
     -zui_std_button "options" "${op_col}$theme[options-text]${op_col:+${ZUI[FMT_END]}}" .zpconsole-action-options-view
     -zui_std_button "debug" "${dg_col}$theme[debug-text]${dg_col:+${ZUI[FMT_END]}}" .zpconsole-action-debug-view
 
-    (( ${ZUI[my_in_preview]} + ZUI[my_in_debug] + ZUI[my_in_options] == 0 )) && {
+    (( ZUI[my_in_debug] + ZUI[my_in_options] == 0 )) && {
         # Variables of the list box
         (( ${+ZUI[my_lbox1_width]} == 0 )) && ZUI[my_lbox1_width]=$(( 25 < ${#chosen_plugins[1]} ? ${#chosen_plugins[1]} : 25 ))
         (( ${+ZUI[my_lbox1_idx]} == 0 )) && ZUI[my_lbox1_idx]=1
         (( ${+ZUI[my_lbox1_opts]} == 0 )) && ZUI[my_lbox1_opts]="${(j:;:)chosen_plugins}"
 
-        # 5. - 6.
+        # 3. - 4.
         (( ZUI[my_compact_mode] > 0 )) && {
             local cm_index="${ZUI[my_compact_mode]}"
             [[ "${${theme[compact-mode-text]}[-1]}" = " " ]] && cm_index+=" " || cm_index=" $cm_index"
@@ -657,11 +611,9 @@ function .zpconsole-set-zui-settings() {
     [[ -n "$theme[menu-bg]" ]] && local spc="$theme[menu-bg] ${ZUI[FMT_END]}" || local spc=" "
     reply=(
         "${reply[1]}$spc${reply[2]}$spc${reply[3]}$spc${reply[4]}$spc${reply[5]}"
-        "$line1"
+        $line1
         $line2
     )
-
-    [[ -z "$line1" && -z "$line2" ]] && reply[2,4]=()
 
     # Non-selectable lines   Hops to jump with [ and ]   Local anchors  Spacing
     reply2=( )               reply3=( 1 )                reply4=( )     reply5="0"
@@ -838,50 +790,6 @@ function .zpconsole-set-zui-settings() {
     [[ "${ZUI[my_compact_mode]}" != "0" || "$ice" -eq 1 ]] && reply5="1" || reply5="0"
 }
 # }}}
-# FUNCTION: .zpconsole-generator-B {{{
-# ZUI generator that creates preview text. This is module 3.
-# There is 0 or 1 instance of this module, depending on chosen
-# view.
-.zpconsole-generator-B() {
-    local mod="$1" ice="$2" arg="$3" sh_col di_col
-
-    -zui_util_map_bools '[[ ${ZUI[my_incl_comm]} != 1 ]];[[ ${ZUI[my_show_diff]} != 1 ]]' \
-                        "sh_col;di_col" \
-                         "$theme[pv-main-buttons]" "${ZUI[BG_BLUE]}"
-
-    local -a output
-    -zui_std_rc_button "comments_${mod}_${ice}" "${sh_col}Show Comments${sh_col:+${ZUI[FMT_END]}}" 'internal=1; (( ZUI[my_incl_comm]=1 - ZUI[my_incl_comm] )); -zui_std_fly_mod_regen '$mod' '$ice' commtoggle' output
-    -zui_std_rc_button "clipboard_${mod}_${ice}" "$theme[pv-main-buttons]Copy To Clipboard${theme[pv-main-buttons]:+${ZUI[FMT_END]}}" 'internal=1; -zui_std_fly_mod_regen '$mod' '$ice' copy' output
-    -zui_std_rc_button "difftoggle_${mod}_${ice}" "${di_col}Diff Mode${di_col:+${ZUI[FMT_END]}}" 'internal=1; (( ZUI[my_show_diff]=1 - ZUI[my_show_diff] )); -zui_std_fly_mod_regen '$mod' '$ice' difftoggle' output
-
-    if (( ZUI[my_show_diff] )); then
-        if [[ "$arg" = "difftoggle" || "$arg" = "commtoggle" ]]; then
-            .zpconsole-compose "${ZUI[my_incl_comm]}" 1
-            print -rl "${reply[@]}" >! "$ZPVIEW_REPO_DIR"/zshrc_test
-        fi
-        reply=( "${(f@)"$( diff -u $zshrc_path $ZPVIEW_REPO_DIR/zshrc_test )"}" )
-    else
-        .zpconsole-compose "${ZUI[my_incl_comm]}"
-    fi
-
-    if [[ "$arg" = "copy" ]]; then
-        if (( ${+commands[xsel]} )); then
-            print -rl -- "${reply[@]}" | command xsel --clipboard --input
-            -zui_std_stalog "Copied ${#reply} lines of text"
-        elif (( ${+commands[pbcopy]} )); then
-            print -rl -- "$reply[@]" | command pbcopy
-            -zui_std_stalog "Copied ${#reply} lines of text"
-        else
-            -zui_std_stalog "No clipboard tool found (checked for pbcopy and xsel), didn't copy"
-        fi
-    fi
-
-    reply[1,0]=( "${output[1]} ${output[2]} ${output[3]}" "" )
-
-    # Non-selectable lines   Hops to jump with [ and ]   Local anchors
-    reply2=( )               reply3=( 1 )                reply4=( )
-}
-# }}}
 # FUNCTION: .zpconsole-generator-OPT {{{
 .zpconsole-generator-OPT() {
     local -a thms tnames layts lnames
@@ -980,7 +888,7 @@ ZUI[reset_current_segment]="no"
 
 ## Start application ##
 zui-event-loop 1:.zpconsole-generator-0 ${#ENTRIES}:.zpconsole-generator-A \
-               0:.zpconsole-generator-B 0:.zpconsole-generator-DBG 0:.zpconsole-generator-OPT \
+               0:.zpconsole-generator-DBG 0:.zpconsole-generator-OPT \
                cfg-refresh:palette,log_colors,colorpair,status_colorpair,log_time_format,mark,mark2,altmark,altmark2
 
 -zui_std_cleanup serialize
