@@ -12,12 +12,6 @@ my_zpconsole_theme_data=(
     menu2-bg                ""
     menu2-active-button-fg  black
     menu2-active-button-bg  green
-    reload              bcyan
-    reload-text         " Load zshrc "
-    save                red
-    save-text           " Save zshrc "
-    preview             bcyan
-    preview-text        " Preview "
     options             bcyan
     options-text        " Options "
     debug               bcyan

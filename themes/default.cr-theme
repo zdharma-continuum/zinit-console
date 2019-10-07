@@ -12,12 +12,6 @@ my_zpconsole_theme_data=(
     menu2-bg                ""
     menu2-active-button-fg  black
     menu2-active-button-bg  green
-    reload              bgreen
-    reload-text         "Reload"
-    save                bred
-    save-text           "Save"
-    preview             bgreen
-    preview-text        "Preview"
     options             bgreen
     options-text        " Options "
     debug               bgreen

@@ -102,7 +102,7 @@ local -a thcol_entries thcol_entries2 thbcol_entries thtxt_entries thtxt_entries
 thcol_entries=(
     # Top bar
     menu-active-button-fg menu2-active-button-fg
-    reload save preview options debug delete-mode edit-mode compact-mode
+    options debug delete-mode edit-mode compact-mode
     # Add bar
     add-snippet add-plugin gold-choose
     # Listing
@@ -127,7 +127,7 @@ thbcol_entries=( menu-bg menu-active-button-bg menu2-bg menu2-active-button-bg )
 
 thtxt_entries=(
     # Top bar
-    reload-text options-text debug-text delete-mode-text edit-mode-text compact-mode-text
+    options-text debug-text delete-mode-text edit-mode-text compact-mode-text
     # Add bar
     add-snippet-text add-plugin-text new-id-url-text gold-choose-text gold-list-info-text
     # Listing
