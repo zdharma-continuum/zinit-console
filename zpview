@@ -909,13 +909,6 @@ function .zpview-set-zui-settings() {
     noglob -zui_std_list_box "lbox8_$mod" ZUI[my_lbox8_width] ZUI[my_lbox8_idx] ZUI[my_lbox8_opts] "" "" "" ''
     -zui_std_button "switch_layout" "$theme[o-switch2-text-c]" 'ZUI[my_rerender]=1; .zpview-switch-layout "${${(s:;:)ZUI[my_lbox8_opts]}[${ZUI[my_lbox8_idx]}]}"; reply=( ",all," "" );'
 
-    # Up / Down list box
-    (( ${+ZUI[my_lbox5_width]} == 0 )) && ZUI[my_lbox5_width]=22
-    ZUI[my_lbox5_idx]=$(( theme[ud-unicode-bool] + 1 ))
-    ZUI[my_lbox5_opts]="$theme[up-text-c]/$theme[down-text-c];$theme[up-unicode-c]/$theme[down-unicode-c]"
-
-    noglob -zui_std_list_box "lbox5_$mod" ZUI[my_lbox5_width] ZUI[my_lbox5_idx] ZUI[my_lbox5_opts] "" "" "" 'ZUI[my_rerender]=1; theme[ud-unicode-bool]=$(( ZUI[my_lbox5_idx] - 1 ));'
-
     # Enabled / Disabled list box
     (( ${+ZUI[my_lbox6_width]} == 0 )) && ZUI[my_lbox6_width]=22
     ZUI[my_lbox6_idx]=$(( theme[lu-unicode-bool] + 1 ))
@@ -938,13 +931,11 @@ function .zpview-set-zui-settings() {
         ""
         "Available layouts: ${reply[3]} ${reply[4]}"
         ""
-        "Buttons to move plugins in the list: ${reply[5]}"
+        "Buttons to load & unload plugins: ${reply[5]}"
         ""
-        "Buttons to enable & disable plugins: ${reply[6]}"
+        "Button to delete a plugin or snippet: ${reply[6]}"
         ""
-        "Button to delete a plugin: ${reply[7]}"
-        ""
-        "${reply[8]}"
+        "${reply[7]}"
     )
 
     # Non-selectable lines   Hops to jump with [ and ]   Local anchors
