@@ -401,13 +401,12 @@ function .zpconsole-set-zui-settings() {
         ZUI[my_in_options]=1
         ZUI[COLORING_PATTERN]=''
     else
-        -zui_std_set_mod_factor 2 $(( ${#cmdlist} / 3 ))
+        -zui_std_set_mod_factor 2 ${#ENTRIES}
         -zui_std_set_mod_factor 4 0
         ZUI[my_in_options]=0
     fi
 
-    if [[ "${ZUI[my_rerender]}" = "1" ]]; then
-        ZUI[my_rerender]=0
+    if (( ZUI[my_in_options] == 0 )); then
         # Regenerate all modules with active instances - it will be mod1 and mod2
         reply=( ",all," "" )
     else
@@ -445,12 +444,12 @@ function .zpconsole-set-zui-settings() {
         [[ -z "$ver" ]] && ver="unknown (no .git/refs/heads/master)" || ver="${ver[1,7]}"
         ZCR_DEBUG_MSGS=( "${ZCR_DEBUG_MSGS[@]/<ZCRVERSION>/$ver}" )
     else
-        -zui_std_set_mod_factor 2 $(( ${#cmdlist} / 3 ))
+        -zui_std_set_mod_factor 2 ${#ENTRIES}
+        -zui_std_set_mod_factor 3 0
         ZUI[my_in_debug]=0
     fi
 
-    if [[ "${ZUI[my_rerender]}" = "1" ]]; then
-        ZUI[my_rerender]=0
+    if (( ZUI[my_in_debug] == 0 )); then
         # Regenerate all modules with active instances - it will be mod1 and mod2
         reply=( ",all," "" )
     else
@@ -516,9 +515,9 @@ function .zpconsole-set-zui-settings() {
 # }}}
 # FUNCTION: .zpconsole-clear-visual-state {{{
 # Clears generators' working variables to trigger refresh
-# from backend, model-structures (like $cmdlist).
+# from backend, model-structures (like $ENTRIES).
 .zpconsole-clear-visual-state() {
-    integer i size=$(( ${#cmdlist} / 3 ))
+    integer i size=$(( ${ENTRIES} / 3 ))
     local -a keys
     local k
     for (( i=1; i<=size+15; i++ )); do
