@@ -25,7 +25,7 @@ my_zpview_theme_data=(
     edit-mode               yellow
     edit-mode-text          " Edit Mode "
     compact-mode            yellow
-    compact-mode-text       " Compact List "
+    compact-mode-text       " List Mode "
 
     # Main view add-plugin submenu
     add-snippet             cyan
