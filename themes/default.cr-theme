@@ -23,16 +23,8 @@ my_zpconsole_theme_data=(
     compact-mode        green
     compact-mode-text   "List Mode"
 
-    # Main view add-plugin submenu
-    add-snippet         green
-    add-snippet-text    "Add snippet"
-    add-plugin          green
-    add-plugin-text     "Add plugin"
-    new-id-url-text     "<Enter or select a plugin to add>"
-    new-id-url-width    37
     ice-list         ""
     ice-list-text    "{ice}"
-    gold-list-info-text "<Gold Plugins Collection>"
 
     # Main listing
     index               ""

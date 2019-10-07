@@ -103,8 +103,6 @@ thcol_entries=(
     # Top bar
     menu-active-button-fg menu2-active-button-fg
     options debug delete-mode edit-mode compact-mode
-    # Add bar
-    add-snippet add-plugin gold-choose
     # Listing
     index loaded unloaded up down delete ice-list minus-ice
     # Snippet item
@@ -128,8 +126,6 @@ thbcol_entries=( menu-bg menu-active-button-bg menu2-bg menu2-active-button-bg )
 thtxt_entries=(
     # Top bar
     options-text debug-text delete-mode-text edit-mode-text compact-mode-text
-    # Add bar
-    add-snippet-text add-plugin-text new-id-url-text gold-choose-text gold-list-info-text
     # Listing
     loaded-text unloaded-text loaded-unicode unloaded-unicode up-text down-text up-unicode down-unicode
     delete-text delete-unicode minus-ice-text ice-list-text
