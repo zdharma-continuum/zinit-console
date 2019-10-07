@@ -764,7 +764,7 @@ function .zpconsole-set-zui-settings() {
     reply2=( )               reply3=( 1 )                reply4=( move_up_${mod}_${ice} move_down_${mod}_${ice} )
 
     # Module's spacing, the blank lines at top
-    [[ "${ZUI[my_compact_mode]}" != "0" || "$ice" -eq 1 ]] && reply5="1" || reply5="0"
+    [[ "${ZUI[my_compact_mode]}" = "1" || "$ice" -eq 1 ]] && reply5="1" || reply5="0"
 }
 # }}}
 # FUNCTION: .zpconsole-generator-OPT {{{
@@ -862,6 +862,9 @@ done
 
 # Don't reset current segment on jump
 ZUI[reset_current_segment]="no"
+
+[[ -z "${ZUI[my_compact_mode]}" ]] && \
+    ZUI[my_compact_mode]=0
 
 ## Start application ##
 zui-event-loop 1:.zpconsole-generator-0 ${#ENTRIES}:.zpconsole-generator-A \
