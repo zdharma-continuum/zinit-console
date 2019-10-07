@@ -459,11 +459,7 @@ function .zpconsole-set-zui-settings() {
 }
 # }}}
 # FUNCTION: .zpconsole-action-delete {{{
-# Removes given entry from $cmdlist and orders full
-# regeneration of document section holding the zplugin
-# invocations (the main view). Basically, there will be
-# one instance of module 2 less (the removed one), and
-# remaining instances will get refreshed.
+# Removes given plugin or snippet from disk
 #
 # $1 - widget id
 # $2 - module's index
@@ -483,7 +479,7 @@ function .zpconsole-set-zui-settings() {
     zplugin delete -y -q "$id_as"
     -zui_std_stalog "" "" "" "Deleted the plugin/snippet $id_as from the disk"
 
-    reply=( ",all," "" )
+    reply=( "" "" )
 }
 # }}}
 # FUNCTION: .zpconsole-action-delete-mode {{{
