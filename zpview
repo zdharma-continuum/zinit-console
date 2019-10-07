@@ -618,7 +618,7 @@ function .zpview-set-zui-settings() {
     -zui_util_map_bools '[[ "${ZUI[my_edit_mode]}" = "1" ]]' ed_col \
                                                 "$act_fg_bg2" \
                                                 "$theme[edit-mode]$theme[menu2-bg]"
-    -zui_util_map_bools '[[ "${ZUI[my_compact_mode]}" = [12] ]]' co_col \
+    -zui_util_map_bools '[[ "${ZUI[my_compact_mode]}" = [01] ]]' co_col \
                                                 "$act_fg_bg2" \
                                                 "$theme[compact-mode]$theme[menu2-bg]"
 
@@ -732,8 +732,8 @@ function .zpview-set-zui-settings() {
 
     [[ -z "${ZUI[toggle_unld_${mod}_${ice}]}" ]] && ZUI[toggle_unld_${mod}_${ice}]="${object_data[unloaded]:-0}"
     -zui_util_map_bools "[[ \"${object_data[unloaded]}\" = 1 ]]" "unloaded_text" "$unloaded" "$loaded"
-    -zui_util_map_bools "[[ \"${object_data[unloaded]}\" = 1 && \"${ZUI[my_compact_mode]}\" = [12] ]]" "smarker_text" "$theme[s-marker-unloaded-text-c]" "$theme[s-marker-text-c]"
-    -zui_util_map_bools "[[ \"${object_data[unloaded]}\" = 1 && \"${ZUI[my_compact_mode]}\" = [12] ]]" "pmarker_text" "$theme[p-marker-unloaded-text-c]" "$theme[p-marker-text-c]"
+    -zui_util_map_bools "[[ \"${object_data[unloaded]}\" = 1 ]]" "smarker_text" "$theme[s-marker-unloaded-text-c]" "$theme[s-marker-text-c]"
+    -zui_util_map_bools "[[ \"${object_data[unloaded]}\" = 1 ]]" "pmarker_text" "$theme[p-marker-unloaded-text-c]" "$theme[p-marker-text-c]"
 
     -zui_std_button "toggle_unld_${mod}_${ice}" "$unloaded_text" \
         "(( ${object_data[unloaded]} )) && { 
@@ -821,7 +821,7 @@ function .zpview-set-zui-settings() {
         local w_url="${output[4]}"
 
         eval "$theme[layout]"
-        [[ "${ZUI[my_compact_mode]}" = [12] ]] && reply=( "${w_snippet_item_short[@]}" ) || reply=( "${w_snippet_item_long[@]}" )
+        [[ "${ZUI[my_compact_mode]}" = [01] ]] && reply=( "${w_snippet_item_short[@]}" ) || reply=( "${w_snippet_item_long[@]}" )
     elif [[ "${object_data[tpe]}" = "plugin" ]]; then
         #
         # 4. Plugin ID
@@ -863,7 +863,7 @@ function .zpview-set-zui-settings() {
         [[ -n "${object_data[unkn]}" ]] && text+=" (${ZUI[RED]}unknown Zplugin subcommand${ZUI[FMT_END]})"
 
         eval "$theme[layout]"
-        [[ "${ZUI[my_compact_mode]}" = [12] ]] && reply=( "${w_other_item_short[@]}" ) || reply=( "${w_other_item_long[@]}" )
+        [[ "${ZUI[my_compact_mode]}" = [01] ]] && reply=( "${w_plugin_item_short[@]}" ) || reply=( "${w_plugin_item_long[@]}" )
     fi
 
     # Instead of debugging ZUI, I've added '-1' here
@@ -874,7 +874,7 @@ function .zpview-set-zui-settings() {
     reply2=( )               reply3=( 1 )                reply4=( move_up_${mod}_${ice} move_down_${mod}_${ice} )
 
     # Module's spacing, the blank lines at top
-    [[ "${ZUI[my_compact_mode]}" != "2" || "$ice" -eq 1 ]] && reply5="1" || reply5="0"
+    [[ "${ZUI[my_compact_mode]}" != "0" || "$ice" -eq 1 ]] && reply5="1" || reply5="0"
 }
 # }}}
 # FUNCTION: .zpview-generator-B {{{
