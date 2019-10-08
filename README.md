@@ -15,19 +15,17 @@ Start the consolette by Ctrl-O Ctrl-J keyboard shortcut, or by running
 
 | Key(s) | Description |
 |--------|-------------|
-| `Ctrl-U` | Half page up                                       |
-| `Ctrl-D` | Half page down                                     |
-| `Ctrl-P` | Previous line, centered                            |
-| `Ctrl-N` | Next line, centered                                |
-| `Ctrl-L` | Redraw of whole display                            |
-| `[`, `]` | Jump to next and previous section (e.g. next plugin or snippet) |
-| `g`, `G` | Jump to beginning and end of whole interface       |
-| `<`,`>` or `{`,`}` | Horizontal scroll (i.e. left or right)   |
-| `/`      | Show incremental search                            |
-| `F1`     | Jump to result (in incremental search) and back    |
-| `Esc`    | Exit incremental search, clearing query            |
-| `Ctrl-W` | Delete whole word (in incremental search)          |
-| `Ctrl-K` | Delete whole line (in incremental search)          |
+| `Ctrl-U`,`Ctrl-D` | Half page up; half page down                             |
+| `Ctrl-P`,`Ctrl-N` | Previous line, centered; next line, centered             |
+| `Ctrl-L` | Redraw of whole display                                           |
+| `[`, `]` | Jump to next and previous section (e.g.: next plugin or snippet)  |
+| `g`, `G` | Jump to beginning and end of whole interface                      |
+| `<`,`>` or `{`,`}` | Horizontal scroll (i.e.: left or right)                 |
+| `/`      | Show incremental search                                           |
+| `F1`     | Jump to result (in incremental search) and back                   |
+| `Esc`    | Exit incremental search, clearing query                           |
+| `Ctrl-W` | Delete whole word (in incremental search)                         |
+| `Ctrl-K` | Delete whole line (in incremental search)                         |
 
 ## Screencast
 
