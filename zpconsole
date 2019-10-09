@@ -10,6 +10,13 @@
 emulate -LR zsh -o extendedglob -o typesetsilent -o warncreateglobal -o noshortloops -o rcquotes
 -zui_std_init2
 
+zmodload zsh/curses &>/dev/null || {
+    print "ERROR: no zsh/curses module available."
+    print "You can build the module yourself by following the instructions at:"
+    print "https://github.com/zplugin/zplugin-console#solving-the-lack-of-zshcurses-module-with-zplugin"
+    return 1
+}
+
 # Don't leak any functions
 typeset -g zpconsole_ef
 zpconsole_ef=( ${(k)functions} )
