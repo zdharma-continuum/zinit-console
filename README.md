@@ -83,7 +83,7 @@ zplugin load zsh-users/zsh
 ```
 
 Then, to update, rebuild and reinstall the `zsh`, you can do `zplugin update
-zsh`. The binary can be safely copied over `/bin/zsh` as it has patchs to all
+zsh`. The binary can be safely copied over `/bin/zsh` as it has paths to all
 needed directories built-in.
 
 
