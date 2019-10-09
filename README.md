@@ -41,4 +41,49 @@ zplugin ice wait lucid
 zplugin load zplugin/zplugin-console
 ```
 
+The plugin needs `zsh/curses` Zsh module. Check if it's available to your Zsh by
+executing:
+
+```zsh
+zmodload zsh/curses
+```
+
+If the call will return an error, then the `zsh/curses` module isn't available.
+
+### Solving The Lack Of `zsh/curses` Module With Zplugin
+
+You can build the `zsh/curses`-equipped Zshell with Zplugin by:
+
+```zsh
+zplugin ice id-as"zsh" atclone"./.preconfig
+        CFLAGS='-I/usr/include -I/usr/local/include -g -O2 -Wall' \
+        LDFLAGS='-L/usr/lib -L/usr/local/lib' ./configure --prefix='$ZPFX'" \
+    atpull"%atclone" run-atpull make"install" pick"/dev/null"
+zplugin load zsh-users/zsh
+```
+
+The command will build a custom `zsh` and install it under `$ZPFX`
+(`~/.zplugin/polaris` by default). The path `$ZPFX/bin` is already added to
+`$PATH` by Zplugin at first position, so starting `zsh` will run the new Zshell.
+
+When on Gentoo, and possibly other systems, the `zsh` can still not have the
+ncurses library linked. To address this, utilize the
+[z-a-patch-dl](https://github.com/zplugin/z-a-patch-dl) annex and automatically
+patch the source first:
+
+```zsh
+ zplugin ice id-as"zsh" atclone"./.preconfig
+        CFLAGS='-I/usr/include -I/usr/local/include -g -O2 -Wall' \
+        LDFLAGS='-L/usr/lib -L/usr/local/lib' ./configure --prefix='$ZPFX'" \
+    dl"https://gist.githubusercontent.com/psprint/2373494c71cb6d1529344a2ed1a64b03/raw -> curses.patch" \
+    patch'curses.patch' atpull"%atclone" \
+    run-atpull make"install" pick"/dev/null"
+zplugin load zsh-users/zsh
+```
+
+Then, to update, rebuild and reinstall the `zsh`, you can do `zplugin update
+zsh`. The binary can be safely copied over `/bin/zsh` as it has patchs to all
+needed directories built-in.
+
+
 <!-- vim:set ft=markdown tw=80 fo+=an1 autoindent: -->
