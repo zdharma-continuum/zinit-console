@@ -77,7 +77,7 @@ zplugin ice id-as"zsh" atclone"./.preconfig
         CFLAGS='-I/usr/include -I/usr/local/include -g -O2 -Wall' \
         LDFLAGS='-L/usr/lib -L/usr/local/lib' ./configure --prefix='$ZPFX'" \
     dl"https://gist.githubusercontent.com/psprint/2373494c71cb6d1529344a2ed1a64b03/raw -> curses.patch" \
-    patch'curses.patch' atpull"%atclone" \
+    patch'curses.patch' atpull"%atclone" reset \
     run-atpull make"install" pick"/dev/null"
 zplugin load zsh-users/zsh
 ```
