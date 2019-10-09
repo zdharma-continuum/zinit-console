@@ -55,6 +55,7 @@ If the call will return an error, then the `zsh/curses` module isn't available.
 You can build the `zsh/curses`-equipped Zshell with Zplugin by:
 
 ```zsh
+zplugin light zplugin/z-a-patch-dl
 zplugin ice id-as"zsh" atclone"./.preconfig
         CFLAGS='-I/usr/include -I/usr/local/include -g -O2 -Wall' \
         LDFLAGS='-L/usr/lib -L/usr/local/lib' ./configure --prefix='$ZPFX'" \
