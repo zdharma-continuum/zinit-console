@@ -520,7 +520,7 @@ function .zpconsole-set-zui-settings() {
 # Clears generators' working variables to trigger refresh
 # from backend, model-structures (like $ENTRIES).
 .zpconsole-clear-visual-state() {
-    integer i size=$(( ${ENTRIES} / 3 ))
+    integer i size=${#ENTRIES}
     local -a keys
     local k
     for (( i=1; i<=size+15; i++ )); do
@@ -613,7 +613,8 @@ function .zpconsole-set-zui-settings() {
 # }}}
 # FUNCTION: .zpconsole-generator-A {{{
 # ZUI generator that creates document block for each plugin or snippet.
-# This is module #2, each document block is an instance of this module.
+# This is module #2, each proper document block is an instance of this
+# module.
 .zpconsole-generator-A() {
     local mod="$1" ice="$2" arg="$3" t
     local -a cmd output
