@@ -167,7 +167,6 @@ function .zpconsole-process-theme() {
         ZPVIEW_THEME=${ZPVIEW_THEME:-$theme_name}
         ZPVIEW_LAYOUT=${ZPVIEW_LAYOUT:-$layout_name}
         # For unicode glyphs, respect configuration file only at start
-        theme_save[ud-unicode-bool]="${theme_save[ud-unicode-bool]:-$move_unicode_buttons}"
         theme_save[lu-unicode-bool]="${theme_save[lu-unicode-bool]:-$toggle_unicode_buttons}"
         theme_save[delete-unicode-bool]="${theme_save[delete-unicode-bool]:-$delete_unicode_button}"
     }
@@ -175,7 +174,6 @@ function .zpconsole-process-theme() {
     theme=( "${(kv@)theme_save}" )
 
     # Mostly initial values, but also error check
-    [[ "${theme[ud-unicode-bool]}" != [0-1] ]] && theme[ud-unicode-bool]=1
     [[ "${theme[lu-unicode-bool]}" != [0-1] ]] && theme[lu-unicode-bool]=1
     [[ "${theme[delete-unicode-bool]}" != [0-1] ]] && theme[delete-unicode-bool]=1
 
