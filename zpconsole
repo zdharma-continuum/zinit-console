@@ -111,7 +111,7 @@ thcol_entries=(
     menu-active-button-fg menu2-active-button-fg
     options debug delete-mode edit-mode compact-mode
     # Listing
-    index loaded unloaded up down delete ice-list minus-ice
+    index loaded unloaded up down delete ice-list minus-ice load-time ms
     # Snippet item
     s-url s-marker s-marker-unloaded s-as-command s-force
     # Plugin item
@@ -631,6 +631,8 @@ function .zpconsole-set-zui-settings() {
     (( ${#tmp[@]} > 1 && ${#tmp[@]} % 2 == 0 )) && object_ices=( "${(Q)tmp[@]}" )
 
     teleid="${object_ices[teleid]}"
+    local w_load_time="${ZPLGM[$entry]}"
+    w_load_time="$theme[load-time]${(l:3:: :)$(( w_load_time * 1000 ))%.*}${ZUI[FMT_END]} $theme[ms]ms${ZUI[FMT_END]}"
 
     if [[ "$teleid" = (http|https|ftp|ftps|scp|OMZ|PZT):* ]]; then
         URL="$teleid"

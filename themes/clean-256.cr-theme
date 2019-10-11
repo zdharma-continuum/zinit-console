@@ -45,6 +45,8 @@ my_zpconsole_theme_data=(
     plus-ice-text           "<+Ice>"
     minus-ice               "yellow"
     minus-ice-text          "<+Ice>"
+    load-time               "yellow"
+    ms                      "green"
 
     # Snippet item in the main listing
     s-url                   cyan
