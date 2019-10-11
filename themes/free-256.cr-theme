@@ -98,7 +98,7 @@ my_zpconsole_theme_data=(
 
     # ZUI settings
     # original palette:     black:red:gree:yel:blu:mag:cyan:white
-    palette-string          "black:180:150:110:60:166:187:220"
+    palette-string          "black:160:150:110:60:166:187:220"
     # original palette:     white cyan yellow green cyan red magenta yellow blue
     logs-palette-string     "white:208:151:152:180:red:magenta:142:180"
     colorpair-string        "white/16"
