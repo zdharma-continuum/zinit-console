@@ -47,6 +47,8 @@ my_zpconsole_theme_data=(
     plus-ice-text           "<+I>"
     minus-ice               "yellow"
     minus-ice-text          "<-I>"
+    load-time               "red"
+    ms                      "green"
 
     # Snippet item in the main listing
     s-url                   magenta
