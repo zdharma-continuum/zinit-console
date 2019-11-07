@@ -10,20 +10,21 @@
 0="${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}"
 0="${${(M)0:#/*}:-$PWD/$0}"
 
-export ZPVIEW_REPO_DIR="${0:h}"
+export ZPCONSOLE_REPO_DIR="${0:h}"
 
 if [[ "${+functions[-zui_std_cleanup]}" = "0" ]]; then
-    echo "ZPView uses ZUI plugin, please load https://github.com/zdharma/zui/ with your plugin manager, or source it."
+    echo "The zplugin consolette uses ZUI plugin, please load https://github.com/zdharma/zui/ with your plugin manager, or source it."
 fi
 
 #
 # Update FPATH if:
-# 1. Not loading with Zplugin
+# 1. Not loading with Zplugin or other plugin manager supporting the plugin standard
 # 2. Not having fpath already updated (that would equal: using other plugin manager)
 #
 
-if [[ -z "$ZPLG_CUR_PLUGIN" && "${fpath[(r)$ZPVIEW_REPO_DIR]}" != $ZPVIEW_REPO_DIR ]]; then
-    fpath+=( "$ZPVIEW_REPO_DIR" )
+if [[ $zsh_loaded_plugins[-1] != */kalc && -z $fpath[(r)${0:h}] ]]
+then
+    fpath+=( "${0:h}" )
 fi
 
 [[ -z "${fg_bold[green]}" ]] && builtin autoload -Uz colors && colors
