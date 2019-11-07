@@ -22,7 +22,7 @@ fi
 # 2. Not having fpath already updated (that would equal: using other plugin manager)
 #
 
-if [[ $zsh_loaded_plugins[-1] != */kalc && -z $fpath[(r)${0:h}] ]]
+if [[ $zsh_loaded_plugins[-1] != */zplugin-console && -z $fpath[(r)${0:h}] ]]
 then
     fpath+=( "${0:h}" )
 fi
