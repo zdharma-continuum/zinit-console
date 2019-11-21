@@ -103,7 +103,7 @@ typeset -ga reply
 # Load and process theme
 #
 
-local ZPVIEW_THEME="$ZPVIEW_THEME" ZPVIEW_LAYOUT="$ZPVIEW_LAYOUT"
+local ZPCONSOLE_THEME="$ZPCONSOLE_THEME" ZPCONSOLE_LAYOUT="$ZPCONSOLE_LAYOUT"
 
 local -a thcol_entries thcol_entries2 thbcol_entries thtxt_entries thtxt_entries2
 thcol_entries=(
@@ -161,11 +161,11 @@ function .zpconsole-process-theme() {
     local -A theme_save
     theme_save=( "${(kv@)theme[(I)*-unicode-bool]}" )
 
-    [[ -f "$ZPVIEW_REPO_DIR/zpconsole.conf" ]] && {
-        source "$ZPVIEW_REPO_DIR/zpconsole.conf"
-        # Global and from-interface $ZPVIEW_THEME overrides configuration file
-        ZPVIEW_THEME=${ZPVIEW_THEME:-$theme_name}
-        ZPVIEW_LAYOUT=${ZPVIEW_LAYOUT:-$layout_name}
+    [[ -f "$ZPCONSOLE_REPO_DIR/zpconsole.conf" ]] && {
+        source "$ZPCONSOLE_REPO_DIR/zpconsole.conf"
+        # Global and from-interface $ZPCONSOLE_THEME overrides configuration file
+        ZPCONSOLE_THEME=${ZPCONSOLE_THEME:-$theme_name}
+        ZPCONSOLE_LAYOUT=${ZPCONSOLE_LAYOUT:-$layout_name}
         # For unicode glyphs, respect configuration file only at start
         theme_save[lu-unicode-bool]="${theme_save[lu-unicode-bool]:-$toggle_unicode_buttons}"
         theme_save[delete-unicode-bool]="${theme_save[delete-unicode-bool]:-$delete_unicode_button}"
@@ -178,21 +178,21 @@ function .zpconsole-process-theme() {
     [[ "${theme[delete-unicode-bool]}" != [0-1] ]] && theme[delete-unicode-bool]=1
 
     # Fallback path for theme name
-    [[ ! -f "$ZPVIEW_REPO_DIR/themes/${ZPVIEW_THEME}.cr-theme" ]] && {
-        -zui_std_stalog "No such theme: " "$ZPVIEW_THEME," "" " reverted to default"
-        ZPVIEW_THEME="default"
+    [[ ! -f "$ZPCONSOLE_REPO_DIR/themes/${ZPCONSOLE_THEME}.cr-theme" ]] && {
+        -zui_std_stalog "No such theme: " "$ZPCONSOLE_THEME," "" " reverted to default"
+        ZPCONSOLE_THEME="default"
 
-        [[ ! -f "$ZPVIEW_REPO_DIR/themes/${ZPVIEW_THEME}.cr-theme" ]] && {
-            print "Couldn't find theme \`$ZPVIEW_THEME', have to abort.."
-            print "Looked for file: $ZPVIEW_REPO_DIR/themes/${ZPVIEW_THEME}.cr-theme"
+        [[ ! -f "$ZPCONSOLE_REPO_DIR/themes/${ZPCONSOLE_THEME}.cr-theme" ]] && {
+            print "Couldn't find theme \`$ZPCONSOLE_THEME', have to abort.."
+            print "Looked for file: $ZPCONSOLE_REPO_DIR/themes/${ZPCONSOLE_THEME}.cr-theme"
             return 1
         }
     }
 
-    source "$ZPVIEW_REPO_DIR/themes/${ZPVIEW_THEME}.cr-theme"
+    source "$ZPCONSOLE_REPO_DIR/themes/${ZPCONSOLE_THEME}.cr-theme"
     theme+=( "${(kv)my_zpconsole_theme_data[@]}" )
     theme[i-blockf]="${${(s;:;)theme[i-id]}[5]}"
-    theme[layout]="$(<$ZPVIEW_REPO_DIR/layouts/$ZPVIEW_LAYOUT.cr-layout)"
+    theme[layout]="$(<$ZPCONSOLE_REPO_DIR/layouts/$ZPCONSOLE_LAYOUT.cr-layout)"
 
     # Stats on color settings
     local -a provided missing
@@ -306,7 +306,7 @@ function .zpconsole-process-theme() {
     } || theme[i-unknown-text-c]="$theme[i-unknown-text]"
 
     /zpconsole-dbg-msg-arr "Theme processing time: $SECONDS seconds" ""
-    -zui_std_stalog "Loaded theme \`$ZPVIEW_THEME' and layout \`$ZPVIEW_LAYOUT'"
+    -zui_std_stalog "Loaded theme \`$ZPCONSOLE_THEME' and layout \`$ZPCONSOLE_LAYOUT'"
 
     return 0
 }
@@ -360,7 +360,7 @@ function .zpconsole-set-zui-settings() {
 # $1 - theme name (not path, no .cr-theme extension)
 .zpconsole-switch-theme() {
     -zui_std_strip_color_codes "$1"
-    ZPVIEW_THEME="$REPLY"
+    ZPCONSOLE_THEME="$REPLY"
     .zpconsole-process-theme
     .zpconsole-set-zui-settings
 }
@@ -372,18 +372,18 @@ function .zpconsole-set-zui-settings() {
 # $1 - layout name (not path, no .cr-theme extension)
 .zpconsole-switch-layout() {
     -zui_std_strip_color_codes "$1"
-    ZPVIEW_LAYOUT="$REPLY"
+    ZPCONSOLE_LAYOUT="$REPLY"
     .zpconsole-process-theme
     .zpconsole-set-zui-settings
 }
 # }}}
 # FUNCTION: .zpconsole-action-save-options {{{
-# Stores current settings to $ZPVIEW_REPO_DIR/zpconsole.conf.
+# Stores current settings to $ZPCONSOLE_REPO_DIR/zpconsole.conf.
 # Outputs status message.
 .zpconsole-action-save-options() {
-    local out="$ZPVIEW_REPO_DIR/zpconsole.conf"
-    print -r -- "local theme_name=${ZPVIEW_THEME}   # Name of active theme. \$ZPVIEW_THEME overrides." >| "$out"
-    print -r -- "local layout_name=${ZPVIEW_LAYOUT}  # Name of active layout. \$ZPVIEW_LAYOUT overrides." >>| "$out"
+    local out="$ZPCONSOLE_REPO_DIR/zpconsole.conf"
+    print -r -- "local theme_name=${ZPCONSOLE_THEME}   # Name of active theme. \$ZPCONSOLE_THEME overrides." >| "$out"
+    print -r -- "local layout_name=${ZPCONSOLE_LAYOUT}  # Name of active layout. \$ZPCONSOLE_LAYOUT overrides." >>| "$out"
     print -r -- "local toggle_unicode_buttons=${theme[lu-unicode-bool]} # Use unicode glyphs for enable & disable buttons?" >>| "$out"
     print -r -- "local delete_unicode_button=${theme[delete-unicode-bool]}  # Use unicode glyphs for disable button?" >>| "$out"
     -zui_std_stalog "Configuration saved to: " "$out"
@@ -778,23 +778,23 @@ function .zpconsole-set-zui-settings() {
 # FUNCTION: .zpconsole-generator-OPT {{{
 .zpconsole-generator-OPT() {
     local -a thms tnames layts lnames
-    thms=( "$ZPVIEW_REPO_DIR"/themes/*.cr-theme )
+    thms=( "$ZPCONSOLE_REPO_DIR"/themes/*.cr-theme )
     tnames=( "${(o@)${thms[@]:t}%.cr-theme}" )
-    layts=( "$ZPVIEW_REPO_DIR"/layouts/*.cr-layout )
+    layts=( "$ZPCONSOLE_REPO_DIR"/layouts/*.cr-layout )
     lnames=( "${(o@)${layts[@]:t}%.cr-layout}" )
 
     reply=()
 
     # Switch theme list box
     (( ${+ZUI[my_lbox4_width]} == 0 )) && ZUI[my_lbox4_width]=18
-    ZUI[my_lbox4_idx]=${tnames[(i)$ZPVIEW_THEME]}
+    ZUI[my_lbox4_idx]=${tnames[(i)$ZPCONSOLE_THEME]}
     eval "ZUI[my_lbox4_opts]=\"$theme[o-theme-box]\${(j:${ZUI[FMT_END]};${theme[o-theme-box]}:)tnames}${ZUI[FMT_END]}\""
     noglob -zui_std_list_box "lbox4_$mod" ZUI[my_lbox4_width] ZUI[my_lbox4_idx] ZUI[my_lbox4_opts] "" "" "" ''
     -zui_std_button "switch_theme" "$theme[o-switch-text-c]" 'ZUI[my_rerender]=1; .zpconsole-switch-theme "${${(s:;:)ZUI[my_lbox4_opts]}[${ZUI[my_lbox4_idx]}]}"; reply=( ",all," "" );'
 
     # Switch layout list box
     (( ${+ZUI[my_lbox8_width]} == 0 )) && ZUI[my_lbox8_width]=18
-    ZUI[my_lbox8_idx]=${lnames[(i)$ZPVIEW_LAYOUT]}
+    ZUI[my_lbox8_idx]=${lnames[(i)$ZPCONSOLE_LAYOUT]}
     eval "ZUI[my_lbox8_opts]=\"$theme[o-layout-box]\${(j:${ZUI[FMT_END]};${theme[o-layout-box]}:)lnames}${ZUI[FMT_END]}\""
     noglob -zui_std_list_box "lbox8_$mod" ZUI[my_lbox8_width] ZUI[my_lbox8_idx] ZUI[my_lbox8_opts] "" "" "" ''
     -zui_std_button "switch_layout" "$theme[o-switch2-text-c]" 'ZUI[my_rerender]=1; .zpconsole-switch-layout "${${(s:;:)ZUI[my_lbox8_opts]}[${ZUI[my_lbox8_idx]}]}"; reply=( ",all," "" );'
