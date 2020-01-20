@@ -1,8 +1,8 @@
 # -*- mode: shell-script -*-
 # vim:ft=zsh
 
-local -A my_zpconsole_theme_data
-my_zpconsole_theme_data=(
+local -A my_ziconsole_theme_data
+my_ziconsole_theme_data=(
     # Top menu bar
     menu-bg                 blue
     menu-active-button-fg   black

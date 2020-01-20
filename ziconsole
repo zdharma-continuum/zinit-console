@@ -18,10 +18,10 @@ zmodload zsh/curses &>/dev/null || {
 }
 
 # Don't leak any functions
-typeset -g zpconsole_ef
-zpconsole_ef=( ${(k)functions} )
-trap "unset -f -- \"\${(k)functions[@]:|zpconsole_ef}\" &>/dev/null; unset zpconsole_ef" EXIT
-trap "unset -f -- \"\${(k)functions[@]:|zpconsole_ef}\" &>/dev/null; unset zpconsole_ef; return 1" INT
+typeset -g ziconsole_ef
+ziconsole_ef=( ${(k)functions} )
+trap "unset -f -- \"\${(k)functions[@]:|ziconsole_ef}\" &>/dev/null; unset ziconsole_ef" EXIT
+trap "unset -f -- \"\${(k)functions[@]:|ziconsole_ef}\" &>/dev/null; unset ziconsole_ef; return 1" INT
 
 -zui_std_store_default_app_config b:text_mode off
 -zui_std_store_default_app_config b:text_select off
@@ -33,24 +33,24 @@ trap "unset -f -- \"\${(k)functions[@]:|zpconsole_ef}\" &>/dev/null; unset zpcon
 local -a ZCR_DEBUG_MSGS
 
 # Append message to the debug view
-/zpconsole-dbg-msg() { ZCR_DEBUG_MSGS+=( "$*" ); }
+/ziconsole-dbg-msg() { ZCR_DEBUG_MSGS+=( "$*" ); }
 # Append multiple messages to the debug view
-/zpconsole-dbg-msg-arr() { ZCR_DEBUG_MSGS+=( "$@" ); }
+/ziconsole-dbg-msg-arr() { ZCR_DEBUG_MSGS+=( "$@" ); }
 
 ZUI[log_time_format]="[%H:%M] "
 
 # Initial debug message
-/zpconsole-dbg-msg "ZSH version: $ZSH_VERSION ($ZSH_PATCHLEVEL), machine: $CPUTYPE $VENDOR $OSTYPE, LANG: $LANG"
+/ziconsole-dbg-msg "ZSH version: $ZSH_VERSION ($ZSH_PATCHLEVEL), machine: $CPUTYPE $VENDOR $OSTYPE, LANG: $LANG"
 if [[ ${+ZINIT} = 1 ]]; then
-    /zpconsole-dbg-msg "Zinit version: <ZPLGVERSION>, Zplugin-Crasis version: <ZCRVERSION>"
-    /zpconsole-dbg-msg "Zinit BIN_DIR: ${ZINIT[BIN_DIR]/$HOME/~}, HOME_DIR: ${ZINIT[HOME_DIR]/$HOME/~}, PLUGINS_DIR: ${ZINIT[PLUGINS_DIR]/$HOME/~}, COMPLETIONS_DIR: ${ZINIT[COMPLETIONS_DIR]/$HOME/~}"
+    /ziconsole-dbg-msg "Zinit version: <ZPLGVERSION>, Zplugin-Crasis version: <ZCRVERSION>"
+    /ziconsole-dbg-msg "Zinit BIN_DIR: ${ZINIT[BIN_DIR]/$HOME/~}, HOME_DIR: ${ZINIT[HOME_DIR]/$HOME/~}, PLUGINS_DIR: ${ZINIT[PLUGINS_DIR]/$HOME/~}, COMPLETIONS_DIR: ${ZINIT[COMPLETIONS_DIR]/$HOME/~}"
 else
-    /zpconsole-dbg-msg "${ZUI[RED]}Zinit not loaded${ZUI[FMT_END]}"
+    /ziconsole-dbg-msg "${ZUI[RED]}Zinit not loaded${ZUI[FMT_END]}"
 fi
 
-/zpconsole-dbg-msg ""
-/zpconsole-dbg-msg-arr "Active plugins:" "${ZINIT_REGISTERED_PLUGINS[@]/(#s)/ }"
-/zpconsole-dbg-msg ""
+/ziconsole-dbg-msg ""
+/ziconsole-dbg-msg-arr "Active plugins:" "${ZINIT_REGISTERED_PLUGINS[@]/(#s)/ }"
+/ziconsole-dbg-msg ""
 
 #
 # CONSTANTS
@@ -152,17 +152,17 @@ thtxt_entries2=( p-mode-text )
 
 local -A theme
 
-# FUNCTION: .zpconsole-process-theme {{{
+# FUNCTION: .ziconsole-process-theme {{{
 # Theme file contains a little complex data and
 # this functions converts it to be ready to use
-function .zpconsole-process-theme() {
+function .ziconsole-process-theme() {
     typeset -F 3 SECONDS=0
 
     local -A theme_save
     theme_save=( "${(kv@)theme[(I)*-unicode-bool]}" )
 
-    [[ -f "$Plugins[ZICONSOLE_REPO_DIR]/zpconsole.conf" ]] && {
-        source "$Plugins[ZICONSOLE_REPO_DIR]/zpconsole.conf"
+    [[ -f "$Plugins[ZICONSOLE_REPO_DIR]/ziconsole.conf" ]] && {
+        source "$Plugins[ZICONSOLE_REPO_DIR]/ziconsole.conf"
         # Global and from-interface $ZPCONSOLE_THEME overrides configuration file
         ZPCONSOLE_THEME=${ZPCONSOLE_THEME:-$theme_name}
         ZPCONSOLE_LAYOUT=${ZPCONSOLE_LAYOUT:-$layout_name}
@@ -190,7 +190,7 @@ function .zpconsole-process-theme() {
     }
 
     source "$Plugins[ZICONSOLE_REPO_DIR]/themes/${ZPCONSOLE_THEME}.cr-theme"
-    theme+=( "${(kv)my_zpconsole_theme_data[@]}" )
+    theme+=( "${(kv)my_ziconsole_theme_data[@]}" )
     theme[i-blockf]="${${(s;:;)theme[i-id]}[5]}"
     theme[layout]="$(<$Plugins[ZICONSOLE_REPO_DIR]/layouts/$ZPCONSOLE_LAYOUT.cr-layout)"
 
@@ -198,12 +198,12 @@ function .zpconsole-process-theme() {
     local -a provided missing
     provided=( "${(@)theme[(I)(${(~j:|:)thcol_entries})]}" "${(@)theme[(I)(${(~j:|:)thcol_entries2})]}" )
     missing=( ${thcol_entries:|provided} ${thcol_entries2:|provided} )
-    /zpconsole-dbg-msg "Theme provided ${#provided} color entries (out of $(( ${#thcol_entries} + ${#thcol_entries2} )) required, missing keys: ${missing:-none})"
+    /ziconsole-dbg-msg "Theme provided ${#provided} color entries (out of $(( ${#thcol_entries} + ${#thcol_entries2} )) required, missing keys: ${missing:-none})"
 
     # Stats on text settings
     provided=( "${(@)theme[(I)(${(~j:|:)thtxt_entries})]}" "${(@)theme[(I)(${(~j:|:)thtxt_entries2})]}" )
     missing=( ${thtxt_entries:|provided} ${thtxt_entries2:|provided} )
-    /zpconsole-dbg-msg "Theme provided ${#provided} text entries (out of $(( ${#thtxt_entries} + ${#thtxt_entries2} )) required, missing keys: ${missing:-none})"
+    /ziconsole-dbg-msg "Theme provided ${#provided} text entries (out of $(( ${#thtxt_entries} + ${#thtxt_entries2} )) required, missing keys: ${missing:-none})"
 
     # Convert colors' symbolic names like "green"
     local ckey cval nval
@@ -305,16 +305,16 @@ function .zpconsole-process-theme() {
         theme[i-unknown-text-c]="${theme[i-unknown-text]//\%s/${theme[i-unknown]}%s$ZUI[FMT_END]}"
     } || theme[i-unknown-text-c]="$theme[i-unknown-text]"
 
-    /zpconsole-dbg-msg-arr "Theme processing time: $SECONDS seconds" ""
+    /ziconsole-dbg-msg-arr "Theme processing time: $SECONDS seconds" ""
     -zui_std_stalog "Loaded theme \`$ZPCONSOLE_THEME' and layout \`$ZPCONSOLE_LAYOUT'"
 
     return 0
 }
 # }}}
-# FUNCTION: .zpconsole-set-zui-settings {{{
+# FUNCTION: .ziconsole-set-zui-settings {{{
 # If theme provides palette-string, it is
 # applied to ZUI settings of this application
-function .zpconsole-set-zui-settings() {
+function .ziconsole-set-zui-settings() {
     [[ -n "$theme[palette-string]" ]] && {
         autoload is-at-least
         if [[ "$theme[palette-string]" = *[[:digit:]]* ]] && ! is-at-least 5.3; then
@@ -353,35 +353,35 @@ function .zpconsole-set-zui-settings() {
     [[ -n "$theme[altmark2]}" ]] && ZUI[altmark2]="$theme[altmark2]"
 }
 # }}}
-# FUNCTION: .zpconsole-switch-theme {{{
+# FUNCTION: .ziconsole-switch-theme {{{
 # Switches theme during operation of Crasis (not
 # at startup).
 #
 # $1 - theme name (not path, no .cr-theme extension)
-.zpconsole-switch-theme() {
+.ziconsole-switch-theme() {
     -zui_std_strip_color_codes "$1"
     ZPCONSOLE_THEME="$REPLY"
-    .zpconsole-process-theme
-    .zpconsole-set-zui-settings
+    .ziconsole-process-theme
+    .ziconsole-set-zui-settings
 }
 # }}}
-# FUNCTION: .zpconsole-switch-layout {{{
+# FUNCTION: .ziconsole-switch-layout {{{
 # Switches layout during operation of Crasis (not
 # at startup).
 #
 # $1 - layout name (not path, no .cr-theme extension)
-.zpconsole-switch-layout() {
+.ziconsole-switch-layout() {
     -zui_std_strip_color_codes "$1"
     ZPCONSOLE_LAYOUT="$REPLY"
-    .zpconsole-process-theme
-    .zpconsole-set-zui-settings
+    .ziconsole-process-theme
+    .ziconsole-set-zui-settings
 }
 # }}}
-# FUNCTION: .zpconsole-action-save-options {{{
-# Stores current settings to $Plugins[ZICONSOLE_REPO_DIR]/zpconsole.conf.
+# FUNCTION: .ziconsole-action-save-options {{{
+# Stores current settings to $Plugins[ZICONSOLE_REPO_DIR]/ziconsole.conf.
 # Outputs status message.
-.zpconsole-action-save-options() {
-    local out="$Plugins[ZICONSOLE_REPO_DIR]/zpconsole.conf"
+.ziconsole-action-save-options() {
+    local out="$Plugins[ZICONSOLE_REPO_DIR]/ziconsole.conf"
     print -r -- "local theme_name=${ZPCONSOLE_THEME}   # Name of active theme. \$ZPCONSOLE_THEME overrides." >| "$out"
     print -r -- "local layout_name=${ZPCONSOLE_LAYOUT}  # Name of active layout. \$ZPCONSOLE_LAYOUT overrides." >>| "$out"
     print -r -- "local toggle_unicode_buttons=${theme[lu-unicode-bool]} # Use unicode glyphs for enable & disable buttons?" >>| "$out"
@@ -390,14 +390,14 @@ function .zpconsole-set-zui-settings() {
 }
 # }}}
 
-.zpconsole-process-theme || return 1
-.zpconsole-set-zui-settings
+.ziconsole-process-theme || return 1
+.ziconsole-set-zui-settings
 
-# FUNCTION: .zpconsole-action-options-view {{{
+# FUNCTION: .ziconsole-action-options-view {{{
 # Enters or leaves options alternate-view. It basically
 # sets option module's instance to be created, once (when
 # entering) - by changing the module factor.
-.zpconsole-action-options-view() {
+.ziconsole-action-options-view() {
     -zui_std_set_mod_factor 3 0 # debug view
     ZUI[my_in_debug]=0
     if [[ "${ZUI[my_in_options]}" != 1 ]]; then
@@ -420,13 +420,13 @@ function .zpconsole-set-zui-settings() {
     fi
 }
 # }}}
-# FUNCTION: .zpconsole-action-debug-view {{{
+# FUNCTION: .ziconsole-action-debug-view {{{
 # Enters or leaves debug view. Plugin-list view is muted
 # by setting module 2 factor to 0 - factor is the number
 # of instances of a module to create, i.e. number of calls
 # to module's generator. Debug module (#4) obtains factor 1.
 # On disable, normal factors are restored.
-.zpconsole-action-debug-view() {
+.ziconsole-action-debug-view() {
     -zui_std_set_mod_factor 4 0
     ZUI[my_in_options]=0
 
@@ -463,13 +463,13 @@ function .zpconsole-set-zui-settings() {
     fi
 }
 # }}}
-# FUNCTION: .zpconsole-action-delete {{{
+# FUNCTION: .ziconsole-action-delete {{{
 # Removes given plugin or snippet from disk
 #
 # $1 - widget id
 # $2 - module's index
 # $3 - module's instance index
-.zpconsole-action-delete() {
+.ziconsole-action-delete() {
     local id="$1" mod="$2" ice="$3"
 
     local entry="${ENTRIES[$ice]}" URL user plugin 
@@ -487,11 +487,11 @@ function .zpconsole-set-zui-settings() {
     reply=( "" "" )
 }
 # }}}
-# FUNCTION: .zpconsole-action-delete-mode {{{
+# FUNCTION: .ziconsole-action-delete-mode {{{
 # Enables ability to delete entries - adds [X] button
 # to each plugin, snippet, external command, etc. (main
 # view).
-.zpconsole-action-delete-mode() {
+.ziconsole-action-delete-mode() {
     if [[ -n "${ZUI[my_delete_mode]}" ]]; then
         (( ZUI[my_delete_mode] = 1 - ZUI[my_delete_mode] ))
     else
@@ -501,10 +501,10 @@ function .zpconsole-set-zui-settings() {
     reply=( ",all," "" )
 }
 # }}}
-# FUNCTION: .zpconsole-action-compact-mode {{{
+# FUNCTION: .ziconsole-action-compact-mode {{{
 # Switches the entry list to compact-mode. In this mode,
 # only a single line per plugin/snippet/etc. is displayed.
-.zpconsole-action-compact-mode() {
+.ziconsole-action-compact-mode() {
     if [[ -n "${ZUI[my_compact_mode]}" ]]; then
         (( ZUI[my_compact_mode] = (ZUI[my_compact_mode]+1) % 3 ))
     else
@@ -514,10 +514,10 @@ function .zpconsole-set-zui-settings() {
     reply=( ",all," "" )
 }
 # }}}
-# FUNCTION: .zpconsole-clear-visual-state {{{
+# FUNCTION: .ziconsole-clear-visual-state {{{
 # Clears generators' working variables to trigger refresh
 # from backend, model-structures (like $ENTRIES).
-.zpconsole-clear-visual-state() {
+.ziconsole-clear-visual-state() {
     integer i size=${#ENTRIES}
     local -a keys
     local k
@@ -542,11 +542,11 @@ function .zpconsole-set-zui-settings() {
     done
 }
 # }}}
-# FUNCTION: .zpconsole-generator-0 {{{
+# FUNCTION: .ziconsole-generator-0 {{{
 # ZUI generator that creates top menu (its hypertext).
 # The menu can differ depending on current view mode
 # (normal, debug, options).
-.zpconsole-generator-0() {
+.ziconsole-generator-0() {
     local mod="$1" ice="$2"
     local pv_col op_col dg_col dl_col ed_col co_col
     local -a optional
@@ -575,8 +575,8 @@ function .zpconsole-set-zui-settings() {
     # 1. - 2.
     local close
     [[ -n "$theme[menu-bg]" || -n "$theme[reload]" ]] && close="${ZUI[FMT_END]}" || close=""
-    -zui_std_button "options" "${op_col}$theme[options-text]${op_col:+${ZUI[FMT_END]}}" .zpconsole-action-options-view
-    -zui_std_button "debug" "${dg_col}$theme[debug-text]${dg_col:+${ZUI[FMT_END]}}" .zpconsole-action-debug-view
+    -zui_std_button "options" "${op_col}$theme[options-text]${op_col:+${ZUI[FMT_END]}}" .ziconsole-action-options-view
+    -zui_std_button "debug" "${dg_col}$theme[debug-text]${dg_col:+${ZUI[FMT_END]}}" .ziconsole-action-debug-view
 
     [[ -n "$theme[menu-bg]" ]] && local spc="$theme[menu-bg] ${ZUI[FMT_END]}" || local spc=" "
 
@@ -591,8 +591,8 @@ function .zpconsole-set-zui-settings() {
             local cm_index="${ZUI[my_compact_mode]}"
             [[ "${${theme[compact-mode-text]}[-1]}" = " " ]] && cm_index+=" " || cm_index=" $cm_index"
         }
-        -zui_std_button "delete_mode" "${dl_col}$theme[delete-mode-text]${dl_col:+${ZUI[FMT_END]}}" .zpconsole-action-delete-mode optional
-        -zui_std_button "compact_mode" "${co_col}$theme[compact-mode-text]$cm_index${co_col:+${ZUI[FMT_END]}}" .zpconsole-action-compact-mode optional
+        -zui_std_button "delete_mode" "${dl_col}$theme[delete-mode-text]${dl_col:+${ZUI[FMT_END]}}" .ziconsole-action-delete-mode optional
+        -zui_std_button "compact_mode" "${co_col}$theme[compact-mode-text]$cm_index${co_col:+${ZUI[FMT_END]}}" .ziconsole-action-compact-mode optional
 
         local line1="${optional[5]}$spc${optional[1]}$spc${optional[2]}"
         local line2=""
@@ -609,11 +609,11 @@ function .zpconsole-set-zui-settings() {
     reply2=( )               reply3=( 1 )                reply4=( )     reply5="0"
 }
 # }}}
-# FUNCTION: .zpconsole-generator-A {{{
+# FUNCTION: .ziconsole-generator-A {{{
 # ZUI generator that creates document block for each plugin or snippet.
 # This is module #2, each proper document block is an instance of this
 # module.
-.zpconsole-generator-A() {
+.ziconsole-generator-A() {
     local mod="$1" ice="$2" arg="$3" t
     local -a cmd output
     local -A object_ices object_data
@@ -682,7 +682,7 @@ function .zpconsole-set-zui-settings() {
     #
 
     (( theme[delete-unicode-bool] )) && local delete="$theme[delete-unicode-c]" || local delete="$theme[delete-text-c]"
-    -zui_std_button_ext "delete_${mod}_${ice}" "$mod" "$ice" "" "" "$delete" .zpconsole-action-delete output
+    -zui_std_button_ext "delete_${mod}_${ice}" "$mod" "$ice" "" "" "$delete" .ziconsole-action-delete output
     if (( ZUI[my_delete_mode] )); then
         output[2]+=" "
     else
@@ -775,8 +775,8 @@ function .zpconsole-set-zui-settings() {
     [[ "${ZUI[my_compact_mode]}" = "1" || "$ice" -eq 1 ]] && reply5="1" || reply5="0"
 }
 # }}}
-# FUNCTION: .zpconsole-generator-OPT {{{
-.zpconsole-generator-OPT() {
+# FUNCTION: .ziconsole-generator-OPT {{{
+.ziconsole-generator-OPT() {
     local -a thms tnames layts lnames
     thms=( "$Plugins[ZICONSOLE_REPO_DIR]"/themes/*.cr-theme )
     tnames=( "${(o@)${thms[@]:t}%.cr-theme}" )
@@ -790,14 +790,14 @@ function .zpconsole-set-zui-settings() {
     ZUI[my_lbox4_idx]=${tnames[(i)$ZPCONSOLE_THEME]}
     eval "ZUI[my_lbox4_opts]=\"$theme[o-theme-box]\${(j:${ZUI[FMT_END]};${theme[o-theme-box]}:)tnames}${ZUI[FMT_END]}\""
     noglob -zui_std_list_box "lbox4_$mod" ZUI[my_lbox4_width] ZUI[my_lbox4_idx] ZUI[my_lbox4_opts] "" "" "" ''
-    -zui_std_button "switch_theme" "$theme[o-switch-text-c]" 'ZUI[my_rerender]=1; .zpconsole-switch-theme "${${(s:;:)ZUI[my_lbox4_opts]}[${ZUI[my_lbox4_idx]}]}"; reply=( ",all," "" );'
+    -zui_std_button "switch_theme" "$theme[o-switch-text-c]" 'ZUI[my_rerender]=1; .ziconsole-switch-theme "${${(s:;:)ZUI[my_lbox4_opts]}[${ZUI[my_lbox4_idx]}]}"; reply=( ",all," "" );'
 
     # Switch layout list box
     (( ${+ZUI[my_lbox8_width]} == 0 )) && ZUI[my_lbox8_width]=18
     ZUI[my_lbox8_idx]=${lnames[(i)$ZPCONSOLE_LAYOUT]}
     eval "ZUI[my_lbox8_opts]=\"$theme[o-layout-box]\${(j:${ZUI[FMT_END]};${theme[o-layout-box]}:)lnames}${ZUI[FMT_END]}\""
     noglob -zui_std_list_box "lbox8_$mod" ZUI[my_lbox8_width] ZUI[my_lbox8_idx] ZUI[my_lbox8_opts] "" "" "" ''
-    -zui_std_button "switch_layout" "$theme[o-switch2-text-c]" 'ZUI[my_rerender]=1; .zpconsole-switch-layout "${${(s:;:)ZUI[my_lbox8_opts]}[${ZUI[my_lbox8_idx]}]}"; reply=( ",all," "" );'
+    -zui_std_button "switch_layout" "$theme[o-switch2-text-c]" 'ZUI[my_rerender]=1; .ziconsole-switch-layout "${${(s:;:)ZUI[my_lbox8_opts]}[${ZUI[my_lbox8_idx]}]}"; reply=( ",all," "" );'
 
     # Enabled / Disabled list box
     (( ${+ZUI[my_lbox6_width]} == 0 )) && ZUI[my_lbox6_width]=22
@@ -814,7 +814,7 @@ function .zpconsole-set-zui-settings() {
     noglob -zui_std_list_box "lbox7_$mod" ZUI[my_lbox7_width] ZUI[my_lbox7_idx] ZUI[my_lbox7_opts] "" "" "" 'ZUI[my_rerender]=1; theme[delete-unicode-bool]=$(( ZUI[my_lbox7_idx] - 1 ));'
 
     # Save configuration button
-    -zui_std_button "save_options" "$theme[o-save-text-c]" '.zpconsole-action-save-options; internal=1;'
+    -zui_std_button "save_options" "$theme[o-save-text-c]" '.ziconsole-action-save-options; internal=1;'
 
     reply=(
         "Available themes: ${reply[1]} ${reply[2]}"
@@ -832,17 +832,17 @@ function .zpconsole-set-zui-settings() {
     reply2=( 2 4 6 )         reply3=( 1 7 )              reply4=( )
 }
 # }}}
-# FUNCTION: .zpconsole-generator-DBG {{{
+# FUNCTION: .ziconsole-generator-DBG {{{
 # ZUI generator that creates debug-report text. This is module 4.
 # There is 0 or 1 instance of this module, depending on chosen
 # view.
-.zpconsole-generator-DBG() {
+.ziconsole-generator-DBG() {
     reply=()
 
     # Variables of the text field
     (( ${+ZUI[my_tfield1_width]} == 0 )) && ZUI[my_tfield1_width]=50
     (( ${+ZUI[my_tfield1_start]} == 0 )) && ZUI[my_tfield1_start]=1
-    (( ${+ZUI[my_tfield1_data]} == 0 )) && ZUI[my_tfield1_data]="$HOME/zpconsole-report.txt"
+    (( ${+ZUI[my_tfield1_data]} == 0 )) && ZUI[my_tfield1_data]="$HOME/ziconsole-report.txt"
 
     noglob -zui_std_text_field "report_path" ZUI[my_tfield1_width] ZUI[my_tfield1_start] ZUI[my_tfield1_data] "" "" "" ''
     -zui_std_button "save_report" "$theme[d-save-text-c]" 'print -rl -- "${ZCR_DEBUG_MSGS[@]}" >| "${ZUI[my_tfield1_data]}"; -zui_std_stalog "Report written to: " "\`${ZUI[my_tfield1_data]}'"'"'"; internal=1;'
@@ -875,8 +875,8 @@ ZUI[reset_current_segment]="no"
     ZUI[my_compact_mode]=0
 
 ## Start application ##
-zui-event-loop 1:.zpconsole-generator-0 ${#ENTRIES}:.zpconsole-generator-A \
-               0:.zpconsole-generator-DBG 0:.zpconsole-generator-OPT \
+zui-event-loop 1:.ziconsole-generator-0 ${#ENTRIES}:.ziconsole-generator-A \
+               0:.ziconsole-generator-DBG 0:.ziconsole-generator-OPT \
                cfg-refresh:palette,log_colors,colorpair,status_colorpair,log_time_format,mark,mark2,altmark,altmark2
 
 -zui_std_cleanup serialize
