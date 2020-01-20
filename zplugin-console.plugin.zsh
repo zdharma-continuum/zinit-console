@@ -10,7 +10,8 @@
 0="${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}"
 0="${${(M)0:#/*}:-$PWD/$0}"
 
-export ZPCONSOLE_REPO_DIR="${0:h}"
+typeset -gA Plugins
+Plugins[ZICONSOLE_REPO_DIR]="${0:h}"
 
 if [[ "${+functions[-zui_std_cleanup]}" = "0" ]]; then
     echo "The zplugin consolette uses ZUI plugin, please load https://github.com/zdharma/zui/ with your plugin manager, or source it."
@@ -29,9 +30,9 @@ fi
 
 [[ -z "${fg_bold[green]}" ]] && builtin autoload -Uz colors && colors
 
-autoload -- zpconsole
+autoload -- ziconsole zpconsole
 
-zle -N zpconsole
-bindkey "^O^J" zpconsole
+zle -N ziconsole
+bindkey "^O^J" ziconsole
 
 # vim:ft=zsh
