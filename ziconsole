@@ -637,7 +637,7 @@ function .ziconsole-set-zui-settings() {
         # Remove whitespace from beginning of URL
         URL="${${URL#"${URL%%[! $'\t']*}"}%/}"
 
-        object_data=( tpe "snippet" arg "$id_as" teleid "$URL"  unloaded 0 )
+        object_data=( tpe "snippet" arg "$id_as" teleid "$URL"  unloaded -1 )
     else
         .zinit-any-to-user-plugin "$teleid"
         user="${reply[-2]}" plugin="${reply[-1]}"
@@ -662,6 +662,8 @@ function .ziconsole-set-zui-settings() {
     -zui_util_map_bools "[[ \"${object_data[unloaded]}\" = 1 ]]" "unloaded_text" "$unloaded" "$loaded"
     -zui_util_map_bools "[[ \"${object_data[unloaded]}\" = 1 ]]" "smarker_text" "$theme[s-marker-unloaded-text-c]" "$theme[s-marker-text-c]"
     -zui_util_map_bools "[[ \"${object_data[unloaded]}\" = 1 ]]" "pmarker_text" "$theme[p-marker-unloaded-text-c]" "$theme[p-marker-text-c]"
+
+    -zui_util_map_bools "[[ \"${object_data[unloaded]}\" = -1 ]]" "unloaded_text" "   " "$unloaded_text"
 
     -zui_std_button "toggle_unld_${mod}_${ice}" "$unloaded_text" \
         "(( ${object_data[unloaded]} )) && { 
