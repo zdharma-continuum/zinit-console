@@ -1,7 +1,7 @@
 # -*- mode: shell-script -*-
 # vim:ft=zsh:sw=4:sts=4:et
 
-local __ice_line="${ioutput[1]}${(j: :)ioutput[2,-1]}"
+local __ice_line="${ioutput[1]} ${(j: :)ioutput[2,-1]}"
 
 # Snippet in the listing
 
