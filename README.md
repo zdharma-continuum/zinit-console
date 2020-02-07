@@ -1,6 +1,6 @@
-# Zplugin Console
+# Zinit Console
 
-A consolette for Zplugin – based on the `zsh/zcurses` Zshell module and the
+A consolette for Zinit – based on the `zsh/zcurses` Zshell module and the
 [ZUI](https://github.com/zdharma/zui) library – it allows the user to:
 
 - view the currently loaded plugins in a colorful list, in one of 3 different
@@ -11,7 +11,7 @@ A consolette for Zplugin – based on the `zsh/zcurses` Zshell module and the
 ## Usage
 
 Start the consolette by Ctrl-O Ctrl-J keyboard shortcut, or by running
-`zpconsole` function in the shell. Then, in the consolette:
+`ziconsole` function in the shell. Then, in the consolette:
 
 | Key(s) | Description |
 |--------|-------------|
@@ -34,15 +34,14 @@ Start the consolette by Ctrl-O Ctrl-J keyboard shortcut, or by running
 ## Installation
 
 Load like any other normal plugin, e.g.:, with use of [Turbo
-mode](http://zdharma.org/zplugin/wiki/INTRODUCTION/#turbo_mode_zsh_62_53):
+mode](http://zdharma.org/zinit/wiki/INTRODUCTION/#turbo_mode_zsh_62_53):
 
 ```zsh
-zplugin ice wait lucid
-zplugin load zplugin/zplugin-console
+zinit wait lucid for zinit-zsh/zinit-console
 ```
 
-The plugin needs `zsh/curses` Zsh module. Check if it's available to your Zsh by
-executing:
+The plugin needs `zsh/curses` Zsh module. You can check if it's available to
+your Zsh by executing:
 
 ```zsh
 zmodload zsh/curses
@@ -50,41 +49,41 @@ zmodload zsh/curses
 
 If the call will return an error, then the `zsh/curses` module isn't available.
 
-### Solving The Lack Of `zsh/curses` Module With Zplugin
+### Solving The Lack Of `zsh/curses` Module With Zinit
 
-You can build the `zsh/curses`-equipped Zshell with Zplugin by:
+You can build the `zsh/curses`-equipped Zshell with Zinit by the following
+command:
 
 ```zsh
-zplugin ice id-as"zsh" atclone"./.preconfig
+zinit ice id-as"zsh" atclone"./.preconfig
         CFLAGS='-I/usr/include -I/usr/local/include -g -O2 -Wall' \
         LDFLAGS='-L/usr/lib -L/usr/local/lib' ./configure --prefix='$ZPFX'" \
     atpull"%atclone" run-atpull make"install" pick"/dev/null"
-zplugin load zsh-users/zsh
+zinit load zsh-users/zsh
 ```
 
 The command will build a custom `zsh` and install it under `$ZPFX`
-(`~/.zplugin/polaris` by default). The path `$ZPFX/bin` is already added to
-`$PATH` by Zplugin at first position, so starting `zsh` will run the new Zshell.
+(`~/.zinit/polaris` by default). The path `$ZPFX/bin` is already added to
+`$PATH` by Zinit at first position, so starting `zsh` will run the new Zshell.
 
 When on Gentoo, and possibly other systems, the `zsh` can still not have the
 ncurses library linked. To address this, utilize the
-[z-a-patch-dl](https://github.com/zplugin/z-a-patch-dl) annex and automatically
+[z-a-patch-dl](https://github.com/zinit/z-a-patch-dl) annex and automatically
 patch the source first:
 
 ```zsh
-zplugin light zplugin/z-a-patch-dl
-zplugin ice id-as"zsh" atclone"./.preconfig
+zinit light zinit/z-a-patch-dl
+zinit ice id-as"zsh" atclone"./.preconfig
         CFLAGS='-I/usr/include -I/usr/local/include -g -O2 -Wall' \
         LDFLAGS='-L/usr/lib -L/usr/local/lib' ./configure --prefix='$ZPFX'" \
     dl"https://gist.githubusercontent.com/psprint/2373494c71cb6d1529344a2ed1a64b03/raw -> curses.patch" \
     patch'curses.patch' atpull"%atclone" reset \
     run-atpull make"install" pick"/dev/null"
-zplugin load zsh-users/zsh
+zinit load zsh-users/zsh
 ```
 
-Then, to update, rebuild and reinstall the `zsh`, you can do `zplugin update
+Then, to update, rebuild and reinstall the `zsh`, you can do `zinit update
 zsh`. The binary can be safely copied over `/bin/zsh` as it has paths to all
 needed directories built-in.
-
 
 <!-- vim:set ft=markdown tw=80 fo+=an1 autoindent: -->
