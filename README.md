@@ -68,11 +68,11 @@ The command will build a custom `zsh` and install it under `$ZPFX`
 
 When on Gentoo, and possibly other systems, the `zsh` can still not have the
 ncurses library linked. To address this, utilize the
-[z-a-patch-dl](https://github.com/zinit/z-a-patch-dl) annex and automatically
-patch the source first:
+[z-a-patch-dl](https://github.com/zinit-zsh/z-a-patch-dl) annex and
+automatically patch the source first:
 
 ```zsh
-zinit light zinit/z-a-patch-dl
+zinit light zinit-zsh/z-a-patch-dl
 zinit ice id-as"zsh" atclone"./.preconfig
         CFLAGS='-I/usr/include -I/usr/local/include -g -O2 -Wall' \
         LDFLAGS='-L/usr/lib -L/usr/local/lib' ./configure --prefix='$ZPFX'" \
