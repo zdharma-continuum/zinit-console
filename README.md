@@ -34,8 +34,8 @@ Start the consolette by Ctrl-O Ctrl-J keyboard shortcut, or by running
 ## Installation
 
 Load like any other normal plugin, e.g.:, with use of [Turbo
-mode](http://zdharma.org/zinit/wiki/INTRODUCTION/#turbo_mode_zsh_62_53) and the
-[for-syntax](http://zdharma.org/zinit/wiki/For-Syntax/):
+mode](https://zdharma-continuum.github.io/zinit/wiki/INTRODUCTION/#turbo_mode_zsh_62_53) and the
+[for-syntax](https://zdharma-continuum.github.io/zinit/wiki/For-Syntax/):
 
 ```zsh
 zinit wait lucid for zinit-zsh/zinit-console

@@ -6,7 +6,7 @@
 #
 
 # Standarized $0 handling
-# http://zdharma.org/zplugin/wiki/zsh-plugin-standard/
+# https://zdharma-continuum.github.io/zinit/wiki/zsh-plugin-standard/
 0="${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}"
 0="${${(M)0:#/*}:-$PWD/$0}"
 
