@@ -639,7 +639,7 @@ function .ziconsole-set-zui-settings() {
 
         object_data=( tpe "snippet" arg "$id_as" teleid "$URL"  unloaded -1 )
     else
-        .zinit-any-to-user-plugin "$teleid"
+        _zi::any-to-user-plugin "$teleid"
         user="${reply[-2]}" plugin="${reply[-1]}"
         object_data=( tpe "plugin" arg "$id_as" teleid "$teleid"  unloaded 0 user "$user" plugin "$plugin" )
         (( !${ZINIT_REGISTERED_PLUGINS[(I)$id_as]} )) && object_data[unloaded]=1
