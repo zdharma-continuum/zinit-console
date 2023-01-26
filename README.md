@@ -1,7 +1,7 @@
 # Zinit Console
 
 A consolette for Zinit – based on the `zsh/zcurses` Zshell module and the
-[ZUI](https://github.com/zdharma/zui) library – it allows the user to:
+[ZUI](https://github.com/zdharma-continuum/zui) library – it allows the user to:
 
 - view the currently loaded plugins in a colorful list, in one of 3 different
   display modes,
@@ -38,7 +38,7 @@ mode](https://zdharma-continuum.github.io/zinit/wiki/INTRODUCTION/#turbo_mode_zs
 [for-syntax](https://zdharma-continuum.github.io/zinit/wiki/For-Syntax/):
 
 ```zsh
-zinit wait lucid for zinit-zsh/zinit-console
+zinit wait lucid for zdharma-continuum/zinit-console
 ```
 
 The plugin needs `zsh/curses` Zsh module. You can check if it's available to
